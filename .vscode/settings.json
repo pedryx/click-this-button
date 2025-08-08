@@ -1,0 +1,35 @@
+{
+    // Allow `rust-analyzer` and `cargo` to run simultaneously.
+    // This uses extra storage space, so consider commenting it out.
+    "rust-analyzer.cargo.targetDir": true,
+    // Display the directory of `mod.rs` files in the tab above the text editor.
+    "workbench.editor.customLabels.patterns": {
+        "**/mod.rs": "${dirname}/mod.rs"
+    },
+    "cSpell.words": [
+        "cfgs",
+        "clippy",
+        "codegen",
+        "debuginfo",
+        "egui",
+        "getrandom",
+        "rustflags",
+        "subsecond",
+        "wgpu"
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.meta": true,
+        "[!s]*/**": true,
+        "s[!r]*/**": true,
+        "sr[!c]*/**": true,
+        "src/[!g]*/**": true,
+        "src/g[!a]*/**": true,
+        "src/ga[!m]*/**": true,
+        "src/gam[!e]*/**": true
+    },
+}
