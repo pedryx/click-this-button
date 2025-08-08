@@ -19,6 +19,7 @@ tracing = { version = "0.1", features = [
 ] }
 bevy_simple_subsecond_system = "0.2.0"
 bevy-inspector-egui = "0.32.0"
+inline_tweak = "1.2.2"
 
 # Your web builds will start failing if you add a dependency that pulls in `getrandom` v0.3+.
 # To fix this, you should tell `getrandom` to use the `wasm_js` backend on Wasm.
@@ -125,3 +126,13 @@ codegen-units = 4
 
 [profile.ci.package."*"]
 opt-level = 0
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

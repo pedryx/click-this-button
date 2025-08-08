@@ -2927,6 +2927,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a257582fdcde896fd96463bf2d40eefea0580021c0712a0e2b028b60b47a837a"
 
 [[package]]
+name = "inline_tweak"
+version = "1.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e09cc2491a8419aa3d0b03b92297cfaf059385b230843cba249ca4cf08c627f8"
+
+[[package]]
 name = "inotify"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4560,6 +4566,7 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "bevy_simple_subsecond_system",
+ "inline_tweak",
  "log",
  "rand 0.9.2",
  "tracing",

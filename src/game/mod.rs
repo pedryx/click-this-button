@@ -1,11 +1,9 @@
 use bevy::prelude::*;
 
-use crate::screens::Screen;
+mod button;
+mod player;
+mod timer;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(Screen::Gameplay), test);
-}
-
-fn test() {
-    println!("test");
+    app.add_plugins((player::plugin, button::plugin, timer::plugin));
 }
