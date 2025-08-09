@@ -38,7 +38,7 @@ pub(super) fn plugin(app: &mut App) {
 struct OnButtonClicked;
 
 #[derive(Component)]
-struct Button;
+pub struct GameButton;
 
 #[derive(Component)]
 struct ButtonTimeBar;
@@ -55,7 +55,7 @@ fn spawn_button(
             Mesh2d(meshes.add(Circle::new(BUTTON_SIZE))),
             MeshMaterial2d(materials.add(BUTTON_COLOR)),
             Transform::from_xyz(0.0, 0.0, BUTTON_Z),
-            Button,
+            GameButton,
             StateScoped(Screen::Gameplay),
             PulseEffect::default(),
         ))
@@ -113,7 +113,7 @@ fn on_button_time_up(
 
 fn handle_button_click(
     player: Single<(&Transform, &mut Player)>,
-    button_transform: Single<&Transform, With<Button>>,
+    button_transform: Single<&Transform, With<GameButton>>,
     mut commands: Commands,
     mouse: Res<ButtonInput<MouseButton>>,
 ) {
@@ -139,7 +139,7 @@ fn update_time_bar_on_button_click(
 fn make_effect_on_button_click(
     _: Trigger<OnButtonClicked>,
     mut commands: Commands,
-    transform: Single<&Transform, With<Button>>,
+    transform: Single<&Transform, With<GameButton>>,
     asset_server: Res<AssetServer>,
 ) {
     let handle = asset_server.load("audio/sound_effects/button_click.ogg");

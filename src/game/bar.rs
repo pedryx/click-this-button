@@ -78,6 +78,10 @@ fn on_add_bar(
             .spawn((
                 Mesh2d(meshes.add(Rectangle::new(bar_layout.size.x, bar_layout.size.y))),
                 MeshMaterial2d(materials.add(bar_layout.border_color)),
+                Pickable {
+                    should_block_lower: false,
+                    ..default()
+                },
             ))
             .with_children(|parent| {
                 // inner rectangle
@@ -88,6 +92,11 @@ fn on_add_bar(
                             bar_layout.size.y - bar_layout.border_size,
                         ))),
                         MeshMaterial2d(materials.add(bar_layout.color)),
+                        Transform::from_xyz(0.0, 0.0, 0.5),
+                        Pickable {
+                            should_block_lower: false,
+                            ..default()
+                        },
                     ))
                     .id();
             })

@@ -31,6 +31,10 @@ fn spawn_timer(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ..default()
             },
             StateScoped(Screen::Gameplay),
+            Pickable {
+                should_block_lower: false,
+                ..default()
+            },
         ))
         .with_children(|parent| {
             parent.spawn((
@@ -48,6 +52,10 @@ fn spawn_timer(mut commands: Commands, asset_server: Res<AssetServer>) {
                     ..default()
                 },
                 TimerText,
+                Pickable {
+                    should_block_lower: false,
+                    ..default()
+                },
             ));
         });
 

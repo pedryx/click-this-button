@@ -25,6 +25,7 @@ pub enum SpawnMechanic {
     Button,
     ButtonTimeBar,
     Timer,
+    Hexagons,
 }
 
 enum ActionType {
