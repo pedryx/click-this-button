@@ -7,8 +7,8 @@ use crate::{
         OnGameOver,
         bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
         game_sequencer::SpawnMechanic,
-        juice::pulse_effect::PulseEffect,
-        player::Player,
+        juice::{circles::SpawnCircles, pulse_effect::PulseEffect},
+        player::{CLICK_PARTICLES_Z, Player},
     },
     screens::Screen,
 };
@@ -30,7 +30,7 @@ pub(super) fn plugin(app: &mut App) {
             (update_button_time, handle_button_click).in_set(PausableSystems),
         )
         .add_observer(on_button_time_up)
-        .add_observer(play_sound_on_button_click)
+        .add_observer(make_effect_on_button_click)
         .add_observer(update_time_bar_on_button_click);
 }
 
@@ -111,16 +111,19 @@ fn on_button_time_up(
 }
 
 fn handle_button_click(
-    player_transform: Single<&Transform, With<Player>>,
+    player: Single<(&Transform, &mut Player)>,
     button_transform: Single<&Transform, With<Button>>,
     mut commands: Commands,
     mouse: Res<ButtonInput<MouseButton>>,
 ) {
-    let distance = player_transform
+    let (transform, mut player) = player.into_inner();
+
+    let distance = transform
         .translation
         .truncate()
         .distance(button_transform.translation.truncate());
     if mouse.just_pressed(MouseButton::Left) && distance <= BUTTON_SIZE {
+        player.clicked_on_target = true;
         commands.trigger(OnButtonClicked);
     }
 }
@@ -132,11 +135,21 @@ fn update_time_bar_on_button_click(
     bar.current = bar.max;
 }
 
-fn play_sound_on_button_click(
+fn make_effect_on_button_click(
     _: Trigger<OnButtonClicked>,
     mut commands: Commands,
+    transform: Single<&Transform, With<Button>>,
     asset_server: Res<AssetServer>,
 ) {
     let handle = asset_server.load("audio/sound_effects/click.ogg");
     commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.3)));
+    commands.trigger(SpawnCircles {
+        location: transform.translation.xy().extend(CLICK_PARTICLES_Z),
+        start_size: BUTTON_SIZE * 1.1,
+        end_size: BUTTON_SIZE * 1.4,
+        start_color: BUTTON_COLOR.to_linear(),
+        thickness: 4.0,
+        spacing: 8.0,
+        ..default()
+    });
 }

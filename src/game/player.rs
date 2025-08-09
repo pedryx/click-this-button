@@ -1,7 +1,12 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::{PausableSystems, game::juice::pulse_effect::PulseEffect, screens::Screen};
+use crate::{
+    PausableSystems,
+    game::juice::{circles::SpawnCircles, pulse_effect::PulseEffect},
+    screens::Screen,
+};
 
+pub const CLICK_PARTICLES_Z: f32 = 20.0;
 const PLAYER_SIZE: f32 = 16.0;
 const PLAYER_COLOR: Color = Color::linear_rgb(1.0, 0.0, 0.0);
 const PLAYER_Z: f32 = 100.0;
@@ -9,11 +14,14 @@ const PLAYER_Z: f32 = 100.0;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Gameplay), spawn_player)
         .add_systems(OnExit(Screen::Gameplay), show_cursor)
-        .add_systems(Update, move_player.in_set(PausableSystems));
+        .add_systems(Update, move_player.in_set(PausableSystems))
+        .add_systems(PostUpdate, create_click_effect.in_set(PausableSystems));
 }
 
-#[derive(Component)]
-pub struct Player;
+#[derive(Component, Default)]
+pub struct Player {
+    pub clicked_on_target: bool,
+}
 
 fn spawn_player(
     mut commands: Commands,
@@ -33,7 +41,7 @@ fn spawn_player(
             max: 1.1,
             speed: 0.5,
         },
-        Player,
+        Player::default(),
         StateScoped(Screen::Gameplay),
     ));
 }
@@ -56,4 +64,25 @@ fn move_player(
 
 fn show_cursor(mut window: Single<&mut Window, With<PrimaryWindow>>) {
     window.cursor_options.visible = true;
+}
+
+fn create_click_effect(
+    mut commands: Commands,
+    player: Single<(&Transform, &mut Player)>,
+    mouse: Res<ButtonInput<MouseButton>>,
+) {
+    let (transform, mut player) = player.into_inner();
+
+    if player.clicked_on_target {
+        player.clicked_on_target = false;
+        return;
+    }
+    if !mouse.just_pressed(MouseButton::Left) {
+        return;
+    }
+
+    commands.trigger(SpawnCircles {
+        location: transform.translation.xy().extend(CLICK_PARTICLES_Z),
+        ..default()
+    });
 }
