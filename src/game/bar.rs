@@ -74,19 +74,24 @@ fn on_add_bar(
 
     commands.entity(entity).with_children(|parent| {
         // outer rectangle
-        bar_entities.outer = parent.spawn((
-            Mesh2d(meshes.add(Rectangle::new(bar_layout.size.x, bar_layout.size.y))),
-            MeshMaterial2d(materials.add(bar_layout.border_color)),
-        )).with_children(|parent| {
-            // inner rectangle
-            bar_entities.inner = parent.spawn((
-                Mesh2d(meshes.add(Rectangle::new(
-                    bar_layout.size.x - bar_layout.border_size,
-                    bar_layout.size.y - bar_layout.border_size
-                ))),
-                MeshMaterial2d(materials.add(bar_layout.color)),
-            )).id();
-        }).id();
+        bar_entities.outer = parent
+            .spawn((
+                Mesh2d(meshes.add(Rectangle::new(bar_layout.size.x, bar_layout.size.y))),
+                MeshMaterial2d(materials.add(bar_layout.border_color)),
+            ))
+            .with_children(|parent| {
+                // inner rectangle
+                bar_entities.inner = parent
+                    .spawn((
+                        Mesh2d(meshes.add(Rectangle::new(
+                            bar_layout.size.x - bar_layout.border_size,
+                            bar_layout.size.y - bar_layout.border_size,
+                        ))),
+                        MeshMaterial2d(materials.add(bar_layout.color)),
+                    ))
+                    .id();
+            })
+            .id();
     });
 }
 
@@ -98,14 +103,10 @@ fn clamp_current_value(
         bar.current = bar.current.clamp(bar.min, bar.max);
 
         if bar_behavior.trigger_on_empty && bar.current == bar.min {
-            commands.trigger(OnBarEmpty {
-                sender: entity,
-            });
+            commands.trigger(OnBarEmpty { sender: entity });
         }
         if bar_behavior.trigger_on_full && bar.current == bar.max {
-            commands.trigger(OnBarFull {
-                _sender: entity,
-            });
+            commands.trigger(OnBarFull { _sender: entity });
         }
     }
 }

@@ -1,7 +1,4 @@
-use bevy::{
-    prelude::*,
-    window::PrimaryWindow,
-};
+use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::screens::Screen;
 

@@ -1,7 +1,10 @@
-use bevy::{asset::{io::Reader, AssetLoader, AsyncReadExt, LoadContext}, prelude::*};
+use bevy::{
+    asset::{AssetLoader, AsyncReadExt, LoadContext, io::Reader},
+    prelude::*,
+};
+use itertools::Itertools;
 use strum_macros::EnumString;
 use thiserror::Error;
-use itertools::Itertools;
 
 use crate::{game::guide::GuideText, screens::Screen};
 
@@ -10,7 +13,10 @@ pub(super) fn plugin(app: &mut App) {
         .init_asset::<ActionSequence>()
         .init_asset_loader::<ActionSequenceAssetLoader>()
         .add_systems(OnEnter(Screen::Gameplay), load_action_sequence)
-        .add_systems(Update, update_game_sequence.run_if(in_state(Screen::Gameplay)));
+        .add_systems(
+            Update,
+            update_game_sequence.run_if(in_state(Screen::Gameplay)),
+        );
 }
 
 #[derive(States, Debug, Hash, Eq, PartialEq, Clone, Default, Copy, EnumString)]
@@ -68,7 +74,8 @@ impl AssetLoader for ActionSequenceAssetLoader {
         let mut text = String::new();
         reader.read_to_string(&mut text).await?;
 
-        let actions = text.lines()
+        let actions = text
+            .lines()
             .map(|l| l.trim())
             .filter(|l| !(l.is_empty() || l.starts_with("#")))
             .map(|l| l.split('|').map(|t| t.trim()).collect_tuple().unwrap())
@@ -79,18 +86,18 @@ impl AssetLoader for ActionSequenceAssetLoader {
                     "M" => ActionType::SpawnMechanic(content.parse::<SpawnMechanic>().unwrap()),
                     _ => panic!("Invalid action type."),
                 },
-            }).collect_vec();
+            })
+            .collect_vec();
 
         Ok(ActionSequence(actions))
     }
 
-    fn extensions(&self) -> &[&str] { &["seq"] }
+    fn extensions(&self) -> &[&str] {
+        &["seq"]
+    }
 }
 
-fn load_action_sequence(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>
-) {
+fn load_action_sequence(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(SequencerState {
         sequence: asset_server.load("sequence.seq"),
         ..default()
@@ -105,15 +112,21 @@ fn update_game_sequence(
     time: Res<Time>,
 ) {
     // get sequence
-    let Some(action_sequence) = action_sequences.get(&state.sequence) else { return };
+    let Some(action_sequence) = action_sequences.get(&state.sequence) else {
+        return;
+    };
 
     // get action
-    if state.action_index >= action_sequence.0.len() { return }
+    if state.action_index >= action_sequence.0.len() {
+        return;
+    }
     let action = &action_sequence.0[state.action_index];
 
     // update time
     state.elapsed_time += time.delta_secs();
-    if state.elapsed_time < action.time { return }
+    if state.elapsed_time < action.time {
+        return;
+    }
     state.elapsed_time -= action.time;
     state.action_index += 1;
 

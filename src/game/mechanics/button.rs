@@ -1,6 +1,11 @@
 use bevy::prelude::*;
 
-use crate::game::{bar::{Bar, BarBehavior, BarLayout, OnBarEmpty}, game_sequencer::SpawnMechanic, player::Player, OnGameOver};
+use crate::game::{
+    OnGameOver,
+    bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
+    game_sequencer::SpawnMechanic,
+    player::Player,
+};
 
 const BUTTON_SIZE: f32 = 96.0;
 const BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
@@ -34,28 +39,28 @@ fn spawn_button(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    commands.spawn((
-        Mesh2d(meshes.add(Circle::new(BUTTON_SIZE))),
-        MeshMaterial2d(materials.add(BUTTON_COLOR)),
-        Transform::from_xyz(0.0, 0.0, BUTTON_Z),
-        Button,
-    )).with_children(|parent| {
-        parent.spawn((
-            Text2d::new("Click\nme!"),
-            TextFont {
-                font: asset_server.load("fonts/Super Vanilla.ttf"),
-                font_size: TEXT_SIZE,
-                ..default()
-            },
-            TextLayout::new_with_justify(JustifyText::Center),
-            TextColor(TEXT_COLOR),
-        ));
-    });
+    commands
+        .spawn((
+            Mesh2d(meshes.add(Circle::new(BUTTON_SIZE))),
+            MeshMaterial2d(materials.add(BUTTON_COLOR)),
+            Transform::from_xyz(0.0, 0.0, BUTTON_Z),
+            Button,
+        ))
+        .with_children(|parent| {
+            parent.spawn((
+                Text2d::new("Click\nme!"),
+                TextFont {
+                    font: asset_server.load("fonts/Super Vanilla.ttf"),
+                    font_size: TEXT_SIZE,
+                    ..default()
+                },
+                TextLayout::new_with_justify(JustifyText::Center),
+                TextColor(TEXT_COLOR),
+            ));
+        });
 }
 
-fn spawn_button_time_bar(
-    mut commands: Commands,
-) {
+fn spawn_button_time_bar(mut commands: Commands) {
     commands.spawn((
         Bar {
             max: TIME_BAR_DURATION,
@@ -75,10 +80,7 @@ fn spawn_button_time_bar(
     ));
 }
 
-fn update_button_time(
-    mut bar: Single<&mut Bar, With<ButtonTimeBar>>,
-    time: Res<Time>,
-) {
+fn update_button_time(mut bar: Single<&mut Bar, With<ButtonTimeBar>>, time: Res<Time>) {
     bar.current -= time.delta_secs();
 }
 
@@ -87,7 +89,9 @@ fn on_button_time_up(
     mut commands: Commands,
     time_bar_entity: Single<Entity, With<ButtonTimeBar>>,
 ) {
-    if trigger.event().sender != *time_bar_entity { return }
+    if trigger.event().sender != *time_bar_entity {
+        return;
+    }
     commands.trigger(OnGameOver);
 }
 
@@ -97,7 +101,10 @@ fn handle_button_click(
     mut commands: Commands,
     mouse: Res<ButtonInput<MouseButton>>,
 ) {
-    let distance = player_transform.translation.truncate().distance(button_transform.translation.truncate());
+    let distance = player_transform
+        .translation
+        .truncate()
+        .distance(button_transform.translation.truncate());
     if mouse.just_pressed(MouseButton::Left) && distance <= BUTTON_SIZE {
         commands.trigger(OnButtonClicked);
     }

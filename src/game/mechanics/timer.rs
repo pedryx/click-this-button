@@ -6,7 +6,11 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Timer), spawn_timer)
         .add_systems(
             Update,
-            (increment_time.run_if(resource_exists::<ElapsedTime>), update_timer_text).run_if(in_state(Screen::Gameplay)),
+            (
+                increment_time.run_if(resource_exists::<ElapsedTime>),
+                update_timer_text,
+            )
+                .run_if(in_state(Screen::Gameplay)),
         );
 }
 
@@ -51,10 +55,7 @@ fn increment_time(time: Res<Time>, mut elapsed_time: ResMut<ElapsedTime>) {
     elapsed_time.0 += time.delta_secs();
 }
 
-fn update_timer_text(
-    mut text: Single<&mut Text, With<TimerText>>,
-    elapsed_time: Res<ElapsedTime>,
-) {
+fn update_timer_text(mut text: Single<&mut Text, With<TimerText>>, elapsed_time: Res<ElapsedTime>) {
     let minutes = elapsed_time.0 / 60.0;
     let seconds = elapsed_time.0 % 60.0;
 

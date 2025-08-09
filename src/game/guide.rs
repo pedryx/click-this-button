@@ -9,10 +9,7 @@ pub(super) fn plugin(app: &mut App) {
 #[derive(Component)]
 pub struct GuideText;
 
-fn spawn_guide(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+fn spawn_guide(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn(Node {
             width: Val::Vw(100.0),
