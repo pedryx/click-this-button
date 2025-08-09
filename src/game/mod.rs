@@ -25,7 +25,7 @@ pub(super) fn plugin(app: &mut App) {
 pub struct OnGameOver;
 
 #[derive(Resource, Asset, Clone, Reflect)]
-pub struct Soundtrack(Handle<AudioSource>);
+struct Soundtrack(Handle<AudioSource>);
 
 impl FromWorld for Soundtrack {
     fn from_world(world: &mut World) -> Self {
@@ -42,6 +42,6 @@ fn start_soundtrack(mut commands: Commands, soundtrack: Res<Soundtrack>) {
     commands.spawn((
         Name::new("Soundtrack"),
         StateScoped(Screen::Gameplay),
-        music(soundtrack.0.clone(), 0.6),
+        music(soundtrack.0.clone(), 0.8),
     ));
 }

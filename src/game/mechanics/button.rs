@@ -1,14 +1,9 @@
 use bevy::prelude::*;
 
 use crate::{
-    PausableSystems,
-    game::{
-        OnGameOver,
-        bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
-        game_sequencer::SpawnMechanic,
-        player::Player,
-    },
-    screens::Screen,
+    audio::sound_effect, game::{
+        bar::{Bar, BarBehavior, BarLayout, OnBarEmpty}, game_sequencer::SpawnMechanic, player::Player, OnGameOver
+    }, screens::Screen, PausableSystems
 };
 
 const BUTTON_SIZE: f32 = 96.0;
@@ -28,6 +23,7 @@ pub(super) fn plugin(app: &mut App) {
             (update_button_time, handle_button_click).in_set(PausableSystems),
         )
         .add_observer(on_button_time_up)
+        .add_observer(play_sound_on_button_click)
         .add_observer(update_time_bar_on_button_click);
 }
 
@@ -124,4 +120,16 @@ fn update_time_bar_on_button_click(
     mut bar: Single<&mut Bar, With<ButtonTimeBar>>,
 ) {
     bar.current = bar.max;
+}
+
+fn play_sound_on_button_click(
+    _: Trigger<OnButtonClicked>,
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+) {
+    let handle = asset_server.load("audio/sound_effects/click.ogg");
+    commands.spawn((
+        Name::new("Button click sound"),
+        sound_effect(handle, 0.3),
+    ));
 }
