@@ -6,7 +6,7 @@ use bevy::{
 use crate::screens::Screen;
 
 const PLAYER_SIZE: f32 = 16.0;
-const PLAYER_COLOR: Color = Color::linear_rgb(1.0, 1.0, 1.0);
+const PLAYER_COLOR: Color = Color::linear_rgb(1.0, 0.0, 0.0);
 const PLAYER_Z: f32 = 100.0;
 
 pub(super) fn plugin(app: &mut App) {

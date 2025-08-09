@@ -23,6 +23,13 @@
         "**/.hg": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
-        "**/*.meta": true
+        "**/*.meta": true,
+        "[!s]*/**": true,
+        "s[!r]*/**": true,
+        "sr[!c]*/**": true,
+        "src/[!g]*/**": true,
+        "src/g[!a]*/**": true,
+        "src/ga[!m]*/**": true,
+        "src/gam[!e]*/**": true
     },
 }

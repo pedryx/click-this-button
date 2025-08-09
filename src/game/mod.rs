@@ -1,9 +1,11 @@
 use bevy::prelude::*;
 
-mod button;
 mod player;
+mod guide;
 mod timer;
 
+mod button;
+
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins((player::plugin, button::plugin, timer::plugin));
+    app.add_plugins((player::plugin, button::plugin, timer::plugin, guide::plugin));
 }
