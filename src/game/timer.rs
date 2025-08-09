@@ -1,18 +1,17 @@
 use bevy::prelude::*;
 
-use crate::screens::Screen;
+use crate::{game::game_sequencer::SpawnMechanic, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
-    app.init_resource::<ElapsedTime>()
-        .add_systems(OnEnter(Screen::Gameplay), spawn_timer)
+    app.add_systems(OnEnter(SpawnMechanic::Timer), spawn_timer)
         .add_systems(
             Update,
-            (increment_time, update_timer_text).run_if(in_state(Screen::Gameplay)),
+            (increment_time.run_if(resource_exists::<ElapsedTime>), update_timer_text).run_if(in_state(Screen::Gameplay)),
         );
 }
 
 #[derive(Resource, Default)]
-struct ElapsedTime(f32);
+pub struct ElapsedTime(f32);
 
 #[derive(Component)]
 struct TimerText;
@@ -44,6 +43,8 @@ fn spawn_timer(mut commands: Commands, asset_server: Res<AssetServer>) {
                 TimerText,
             ));
         });
+
+    commands.init_resource::<ElapsedTime>();
 }
 
 fn increment_time(time: Res<Time>, mut elapsed_time: ResMut<ElapsedTime>) {

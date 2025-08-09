@@ -4567,8 +4567,10 @@ dependencies = [
  "bevy-inspector-egui",
  "bevy_simple_subsecond_system",
  "inline_tweak",
+ "itertools 0.14.0",
  "log",
  "rand 0.9.2",
+ "thiserror 2.0.12",
  "tracing",
 ]
 

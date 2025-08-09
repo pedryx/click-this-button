@@ -7,7 +7,7 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 #[derive(Component)]
-struct GuideText;
+pub struct GuideText;
 
 fn spawn_guide(
     mut commands: Commands,

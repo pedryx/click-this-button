@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::screens::Screen;
+use crate::{game::game_sequencer::SpawnMechanic};
 
 const BUTTON_SIZE: f32 = 64.0;
 const BUTTON_START_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
@@ -8,7 +8,7 @@ const BUTTON_START_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
 const BUTTON_Z: f32 = 0.0;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(Screen::Gameplay), spawn_button);
+    app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button);
 }
 
 #[derive(Component)]

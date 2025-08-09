@@ -13,8 +13,10 @@
         "debuginfo",
         "egui",
         "getrandom",
+        "itertools",
         "rustflags",
         "subsecond",
+        "thiserror",
         "wgpu"
     ],
     "files.exclude": {
