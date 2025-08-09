@@ -37,7 +37,11 @@ pub struct SoundEffect;
 
 /// A sound effect audio instance.
 pub fn sound_effect(handle: Handle<AudioSource>, volume: f32) -> impl Bundle {
-    (AudioPlayer(handle), PlaybackSettings::DESPAWN.with_volume(Volume::Linear(volume)), SoundEffect)
+    (
+        AudioPlayer(handle),
+        PlaybackSettings::DESPAWN.with_volume(Volume::Linear(volume)),
+        SoundEffect,
+    )
 }
 
 /// [`GlobalVolume`] doesn't apply to already-running audio entities, so this system will update them.

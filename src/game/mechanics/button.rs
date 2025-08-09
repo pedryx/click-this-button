@@ -1,9 +1,16 @@
 use bevy::prelude::*;
 
 use crate::{
-    audio::sound_effect, game::{
-        bar::{Bar, BarBehavior, BarLayout, OnBarEmpty}, game_sequencer::SpawnMechanic, player::Player, OnGameOver
-    }, screens::Screen, PausableSystems
+    PausableSystems,
+    audio::sound_effect,
+    game::{
+        OnGameOver,
+        bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
+        game_sequencer::SpawnMechanic,
+        juice::pulse_effect::PulseEffect,
+        player::Player,
+    },
+    screens::Screen,
 };
 
 const BUTTON_SIZE: f32 = 96.0;
@@ -44,11 +51,13 @@ fn spawn_button(
 ) {
     commands
         .spawn((
+            Name::new("Button"),
             Mesh2d(meshes.add(Circle::new(BUTTON_SIZE))),
             MeshMaterial2d(materials.add(BUTTON_COLOR)),
             Transform::from_xyz(0.0, 0.0, BUTTON_Z),
             Button,
             StateScoped(Screen::Gameplay),
+            PulseEffect::default(),
         ))
         .with_children(|parent| {
             parent.spawn((
@@ -66,6 +75,7 @@ fn spawn_button(
 
 fn spawn_button_time_bar(mut commands: Commands) {
     commands.spawn((
+        Name::new("Button time bar"),
         Bar {
             max: TIME_BAR_DURATION,
             current: TIME_BAR_DURATION,
@@ -128,8 +138,5 @@ fn play_sound_on_button_click(
     asset_server: Res<AssetServer>,
 ) {
     let handle = asset_server.load("audio/sound_effects/click.ogg");
-    commands.spawn((
-        Name::new("Button click sound"),
-        sound_effect(handle, 0.3),
-    ));
+    commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.3)));
 }

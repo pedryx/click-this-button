@@ -1,6 +1,6 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::{PausableSystems, screens::Screen};
+use crate::{PausableSystems, game::juice::pulse_effect::PulseEffect, screens::Screen};
 
 const PLAYER_SIZE: f32 = 16.0;
 const PLAYER_COLOR: Color = Color::linear_rgb(1.0, 0.0, 0.0);
@@ -24,9 +24,15 @@ fn spawn_player(
     window.cursor_options.visible = false;
 
     commands.spawn((
+        Name::new("Player"),
         Mesh2d(meshes.add(Circle::new(PLAYER_SIZE))),
         MeshMaterial2d(materials.add(PLAYER_COLOR)),
         Transform::from_xyz(0.0, 0.0, PLAYER_Z),
+        PulseEffect {
+            min: 0.9,
+            max: 1.1,
+            speed: 0.5,
+        },
         Player,
         StateScoped(Screen::Gameplay),
     ));

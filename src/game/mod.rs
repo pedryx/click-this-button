@@ -5,17 +5,19 @@ use crate::{asset_tracking::LoadResource, audio::music, screens::Screen};
 mod bar;
 mod game_sequencer;
 mod guide;
+mod juice;
 mod mechanics;
 mod player;
 
 pub(super) fn plugin(app: &mut App) {
     app.load_resource::<Soundtrack>()
         .add_plugins((
-            player::plugin,
-            guide::plugin,
             game_sequencer::plugin,
-            mechanics::plugin,
+            guide::plugin,
+            player::plugin,
             bar::plugin,
+            mechanics::plugin,
+            juice::plugin,
         ))
         .add_systems(OnEnter(Screen::Gameplay), start_soundtrack)
         .add_observer(on_game_over);
