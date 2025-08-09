@@ -20,7 +20,11 @@ pub struct Music;
 
 /// A music audio instance.
 pub fn music(handle: Handle<AudioSource>, volume: f32) -> impl Bundle {
-    (AudioPlayer(handle), PlaybackSettings::LOOP.with_volume(bevy::audio::Volume::Linear(volume)), Music)
+    (
+        AudioPlayer(handle),
+        PlaybackSettings::LOOP.with_volume(bevy::audio::Volume::Linear(volume)),
+        Music,
+    )
 }
 
 /// An organizational marker component that should be added to a spawned [`AudioPlayer`] if it's in the

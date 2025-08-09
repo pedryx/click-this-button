@@ -1,8 +1,15 @@
 use bevy::prelude::*;
 
-use crate::{game::{
-    bar::{Bar, BarBehavior, BarLayout, OnBarEmpty}, game_sequencer::SpawnMechanic, player::Player, OnGameOver
-}, screens::{self, Screen}, PausableSystems};
+use crate::{
+    PausableSystems,
+    game::{
+        OnGameOver,
+        bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
+        game_sequencer::SpawnMechanic,
+        player::Player,
+    },
+    screens::Screen,
+};
 
 const BUTTON_SIZE: f32 = 96.0;
 const BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
@@ -16,7 +23,10 @@ const TIME_BAR_DURATION: f32 = 5.0;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button)
         .add_systems(OnEnter(SpawnMechanic::ButtonTimeBar), spawn_button_time_bar)
-        .add_systems(Update, (update_button_time, handle_button_click).in_set(PausableSystems))
+        .add_systems(
+            Update,
+            (update_button_time, handle_button_click).in_set(PausableSystems),
+        )
         .add_observer(on_button_time_up)
         .add_observer(update_time_bar_on_button_click);
 }

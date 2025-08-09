@@ -38,10 +38,7 @@ fn on_game_over(_: Trigger<OnGameOver>, mut app_exit_ew: EventWriter<AppExit>) {
     app_exit_ew.write(AppExit::Success);
 }
 
-fn start_soundtrack(
-    mut commands: Commands,
-    soundtrack: Res<Soundtrack>,
-) {
+fn start_soundtrack(mut commands: Commands, soundtrack: Res<Soundtrack>) {
     commands.spawn((
         Name::new("Soundtrack"),
         StateScoped(Screen::Gameplay),

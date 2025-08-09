@@ -1,6 +1,6 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::{screens::Screen, PausableSystems};
+use crate::{PausableSystems, screens::Screen};
 
 const PLAYER_SIZE: f32 = 16.0;
 const PLAYER_COLOR: Color = Color::linear_rgb(1.0, 0.0, 0.0);
@@ -48,8 +48,6 @@ fn move_player(
     player.translation = world_position.extend(PLAYER_Z);
 }
 
-fn show_cursor(
-    mut window: Single<&mut Window, With<PrimaryWindow>>,
-) {
+fn show_cursor(mut window: Single<&mut Window, With<PrimaryWindow>>) {
     window.cursor_options.visible = true;
 }

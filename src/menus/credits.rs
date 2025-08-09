@@ -34,16 +34,17 @@ fn spawn_credits_menu(mut commands: Commands) {
 }
 
 fn created_by() -> impl Bundle {
-    grid(vec![
-        ["Petr Kotab", "Code & Gameplay Soundtrack"],
-    ])
+    grid(vec![["Petr Kotab", "Code & Gameplay Soundtrack"]])
 }
 
 fn assets() -> impl Bundle {
     grid(vec![
         ["Button SFX", "CC0 by Jaszunio15"],
         ["Credits Music", "CC BY 3.0 by Kevin MacLeod"],
-        ["Supper Vanilla font", "Free for personal use & commercial use by  fsuarez91"],
+        [
+            "Supper Vanilla font",
+            "Free for personal use & commercial use by  fsuarez91",
+        ],
         [
             "Bevy logo",
             "All rights reserved by the Bevy Foundation, permission granted for splash screen use when unmodified",

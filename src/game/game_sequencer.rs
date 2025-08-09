@@ -6,17 +6,14 @@ use itertools::Itertools;
 use strum_macros::EnumString;
 use thiserror::Error;
 
-use crate::{game::guide::GuideText, screens::Screen, PausableSystems};
+use crate::{PausableSystems, game::guide::GuideText, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
     app.init_state::<SpawnMechanic>()
         .init_asset::<ActionSequence>()
         .init_asset_loader::<ActionSequenceAssetLoader>()
         .add_systems(OnEnter(Screen::Gameplay), load_action_sequence)
-        .add_systems(
-            Update,
-            update_game_sequence.in_set(PausableSystems),
-        );
+        .add_systems(Update, update_game_sequence.in_set(PausableSystems));
 }
 
 #[derive(States, Debug, Hash, Eq, PartialEq, Clone, Default, Copy, EnumString)]
