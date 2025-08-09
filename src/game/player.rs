@@ -2,6 +2,7 @@ use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{
     PausableSystems,
+    audio::sound_effect,
     game::juice::{circles::SpawnCircles, pulse_effect::PulseEffect},
     screens::Screen,
 };
@@ -69,6 +70,7 @@ fn show_cursor(mut window: Single<&mut Window, With<PrimaryWindow>>) {
 fn create_click_effect(
     mut commands: Commands,
     player: Single<(&Transform, &mut Player)>,
+    asset_server: Res<AssetServer>,
     mouse: Res<ButtonInput<MouseButton>>,
 ) {
     let (transform, mut player) = player.into_inner();
@@ -81,6 +83,8 @@ fn create_click_effect(
         return;
     }
 
+    let handle = asset_server.load("audio/sound_effects/click.ogg");
+    commands.spawn((Name::new("Cursor click sound"), sound_effect(handle, 0.1)));
     commands.trigger(SpawnCircles {
         location: transform.translation.xy().extend(CLICK_PARTICLES_Z),
         ..default()

@@ -92,6 +92,7 @@ fn spawn_button_time_bar(mut commands: Commands) {
         Transform::from_xyz(0.0, -BUTTON_SIZE * 1.5, BUTTON_Z),
         ButtonTimeBar,
         StateScoped(Screen::Gameplay),
+        Visibility::default(),
     ));
 }
 
@@ -141,8 +142,8 @@ fn make_effect_on_button_click(
     transform: Single<&Transform, With<Button>>,
     asset_server: Res<AssetServer>,
 ) {
-    let handle = asset_server.load("audio/sound_effects/click.ogg");
-    commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.3)));
+    let handle = asset_server.load("audio/sound_effects/button_click.ogg");
+    commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.4)));
     commands.trigger(SpawnCircles {
         location: transform.translation.xy().extend(CLICK_PARTICLES_Z),
         start_size: BUTTON_SIZE * 1.1,
