@@ -15,7 +15,7 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 #[derive(Component)]
-struct Player;
+pub struct Player;
 
 fn spawn_player(
     mut commands: Commands,

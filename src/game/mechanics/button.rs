@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
-use crate::game::{bar::{Bar, BarBehavior, BarLayout, OnBarEmpty}, game_sequencer::SpawnMechanic, OnGameOver};
+use crate::game::{bar::{Bar, BarBehavior, BarLayout, OnBarEmpty}, game_sequencer::SpawnMechanic, player::Player, OnGameOver};
 
 const BUTTON_SIZE: f32 = 96.0;
 const BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
-const BUTTON_Z: f32 = 0.0;
+const BUTTON_Z: f32 = 50.0;
 
 const TEXT_SIZE: f32 = 32.0;
 const TEXT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.0);
@@ -14,9 +14,13 @@ const TIME_BAR_DURATION: f32 = 5.0;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button)
         .add_systems(OnEnter(SpawnMechanic::ButtonTimeBar), spawn_button_time_bar)
-        .add_systems(Update, update_button_time)
-        .add_observer(on_button_time_up);
+        .add_systems(Update, (update_button_time, handle_button_click))
+        .add_observer(on_button_time_up)
+        .add_observer(update_time_bar_on_button_click);
 }
+
+#[derive(Event)]
+struct OnButtonClicked;
 
 #[derive(Component)]
 struct Button;
@@ -84,6 +88,24 @@ fn on_button_time_up(
     time_bar_entity: Single<Entity, With<ButtonTimeBar>>,
 ) {
     if trigger.event().sender != *time_bar_entity { return }
-
     commands.trigger(OnGameOver);
+}
+
+fn handle_button_click(
+    player_transform: Single<&Transform, With<Player>>,
+    button_transform: Single<&Transform, With<Button>>,
+    mut commands: Commands,
+    mouse: Res<ButtonInput<MouseButton>>,
+) {
+    let distance = player_transform.translation.truncate().distance(button_transform.translation.truncate());
+    if mouse.just_pressed(MouseButton::Left) && distance <= BUTTON_SIZE {
+        commands.trigger(OnButtonClicked);
+    }
+}
+
+fn update_time_bar_on_button_click(
+    _: Trigger<OnButtonClicked>,
+    mut bar: Single<&mut Bar, With<ButtonTimeBar>>,
+) {
+    bar.current = bar.max;
 }
