@@ -4,8 +4,10 @@ use crate::{game::game_sequencer::SpawnMechanic};
 
 const BUTTON_SIZE: f32 = 64.0;
 const BUTTON_START_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
-//const BUTTON_END_COLOR: Color = Color::linear_rgb(1.0, 0.0, 0.0);
 const BUTTON_Z: f32 = 0.0;
+
+const TEXT_SIZE: f32 = 32.0;
+const TEXT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.0);
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button);
@@ -16,6 +18,7 @@ struct Button;
 
 fn spawn_button(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
@@ -24,5 +27,16 @@ fn spawn_button(
         MeshMaterial2d(materials.add(BUTTON_START_COLOR)),
         Transform::from_xyz(0.0, 0.0, BUTTON_Z),
         Button,
-    ));
+    )).with_children(|parent| {
+        parent.spawn((
+            Text2d::new("Click\nme!"),
+            TextFont {
+                font: asset_server.load("fonts/Super Vanilla.ttf"),
+                font_size: TEXT_SIZE,
+                ..default()
+            },
+            TextLayout::new_with_justify(JustifyText::Center),
+            TextColor(TEXT_COLOR),
+        ));
+    });
 }
