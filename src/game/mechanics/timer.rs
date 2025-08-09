@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{game::game_sequencer::SpawnMechanic, screens::Screen};
+use crate::{game::game_sequencer::SpawnMechanic, screens::Screen, PausableSystems};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Timer), spawn_timer)
@@ -10,7 +10,7 @@ pub(super) fn plugin(app: &mut App) {
                 increment_time.run_if(resource_exists::<ElapsedTime>),
                 update_timer_text,
             )
-                .run_if(in_state(Screen::Gameplay)),
+                .in_set(PausableSystems),
         );
 }
 
@@ -22,13 +22,16 @@ struct TimerText;
 
 fn spawn_timer(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
-        .spawn(Node {
-            width: Val::Vw(100.0),
-            height: Val::Vh(100.0),
-            justify_content: JustifyContent::Center,
-            align_items: AlignItems::FlexStart,
-            ..default()
-        })
+        .spawn((
+            Node {
+                width: Val::Vw(100.0),
+                height: Val::Vh(100.0),
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::FlexStart,
+                ..default()
+            },
+            StateScoped(Screen::Gameplay),
+        ))
         .with_children(|parent| {
             parent.spawn((
                 Text::new("00:00"),

@@ -1,6 +1,6 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::screens::Screen;
+use crate::{screens::Screen, PausableSystems};
 
 const PLAYER_SIZE: f32 = 16.0;
 const PLAYER_COLOR: Color = Color::linear_rgb(1.0, 0.0, 0.0);
@@ -8,7 +8,8 @@ const PLAYER_Z: f32 = 100.0;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Gameplay), spawn_player)
-        .add_systems(Update, move_player.run_if(in_state(Screen::Gameplay)));
+        .add_systems(OnExit(Screen::Gameplay), show_cursor)
+        .add_systems(Update, move_player.in_set(PausableSystems));
 }
 
 #[derive(Component)]
@@ -27,6 +28,7 @@ fn spawn_player(
         MeshMaterial2d(materials.add(PLAYER_COLOR)),
         Transform::from_xyz(0.0, 0.0, PLAYER_Z),
         Player,
+        StateScoped(Screen::Gameplay),
     ));
 }
 
@@ -44,4 +46,10 @@ fn move_player(
     };
 
     player.translation = world_position.extend(PLAYER_Z);
+}
+
+fn show_cursor(
+    mut window: Single<&mut Window, With<PrimaryWindow>>,
+) {
+    window.cursor_options.visible = true;
 }

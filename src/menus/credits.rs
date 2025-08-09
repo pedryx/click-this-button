@@ -35,16 +35,15 @@ fn spawn_credits_menu(mut commands: Commands) {
 
 fn created_by() -> impl Bundle {
     grid(vec![
-        ["Joe Shmoe", "Implemented alligator wrestling AI"],
-        ["Jane Doe", "Made the music for the alien invasion"],
+        ["Petr Kotab", "Code & Gameplay Soundtrack"],
     ])
 }
 
 fn assets() -> impl Bundle {
     grid(vec![
-        ["Ducky sprite", "CC0 by Caz Creates Games"],
         ["Button SFX", "CC0 by Jaszunio15"],
-        ["Music", "CC BY 3.0 by Kevin MacLeod"],
+        ["Credits Music", "CC BY 3.0 by Kevin MacLeod"],
+        ["Supper Vanilla font", "Free for personal use & commercial use by  fsuarez91"],
         [
             "Bevy logo",
             "All rights reserved by the Bevy Foundation, permission granted for splash screen use when unmodified",
@@ -108,6 +107,6 @@ fn start_credits_music(mut commands: Commands, credits_music: Res<CreditsAssets>
     commands.spawn((
         Name::new("Credits Music"),
         StateScoped(Menu::Credits),
-        music(credits_music.music.clone()),
+        music(credits_music.music.clone(), 1.0),
     ));
 }

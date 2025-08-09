@@ -34,6 +34,7 @@ fn spawn_guide(mut commands: Commands, asset_server: Res<AssetServer>) {
                     ..default()
                 },
                 GuideText,
+                StateScoped(Screen::Gameplay),
             ));
         });
 }

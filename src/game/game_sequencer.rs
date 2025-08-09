@@ -6,7 +6,7 @@ use itertools::Itertools;
 use strum_macros::EnumString;
 use thiserror::Error;
 
-use crate::{game::guide::GuideText, screens::Screen};
+use crate::{game::guide::GuideText, screens::Screen, PausableSystems};
 
 pub(super) fn plugin(app: &mut App) {
     app.init_state::<SpawnMechanic>()
@@ -15,7 +15,7 @@ pub(super) fn plugin(app: &mut App) {
         .add_systems(OnEnter(Screen::Gameplay), load_action_sequence)
         .add_systems(
             Update,
-            update_game_sequence.run_if(in_state(Screen::Gameplay)),
+            update_game_sequence.in_set(PausableSystems),
         );
 }
 

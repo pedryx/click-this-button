@@ -1,11 +1,8 @@
 use bevy::prelude::*;
 
-use crate::game::{
-    OnGameOver,
-    bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
-    game_sequencer::SpawnMechanic,
-    player::Player,
-};
+use crate::{game::{
+    bar::{Bar, BarBehavior, BarLayout, OnBarEmpty}, game_sequencer::SpawnMechanic, player::Player, OnGameOver
+}, screens::{self, Screen}, PausableSystems};
 
 const BUTTON_SIZE: f32 = 96.0;
 const BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
@@ -19,7 +16,7 @@ const TIME_BAR_DURATION: f32 = 5.0;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button)
         .add_systems(OnEnter(SpawnMechanic::ButtonTimeBar), spawn_button_time_bar)
-        .add_systems(Update, (update_button_time, handle_button_click))
+        .add_systems(Update, (update_button_time, handle_button_click).in_set(PausableSystems))
         .add_observer(on_button_time_up)
         .add_observer(update_time_bar_on_button_click);
 }
@@ -45,6 +42,7 @@ fn spawn_button(
             MeshMaterial2d(materials.add(BUTTON_COLOR)),
             Transform::from_xyz(0.0, 0.0, BUTTON_Z),
             Button,
+            StateScoped(Screen::Gameplay),
         ))
         .with_children(|parent| {
             parent.spawn((
@@ -77,6 +75,7 @@ fn spawn_button_time_bar(mut commands: Commands) {
         },
         Transform::from_xyz(0.0, -BUTTON_SIZE * 1.5, BUTTON_Z),
         ButtonTimeBar,
+        StateScoped(Screen::Gameplay),
     ));
 }
 

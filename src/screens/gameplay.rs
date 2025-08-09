@@ -1,6 +1,6 @@
 //! The screen state for the main gameplay.
 
-use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
+use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*, window::PrimaryWindow};
 
 use crate::{Pause, menus::Menu, screens::Screen};
 
@@ -33,7 +33,6 @@ fn unpause(mut next_pause: ResMut<NextState<Pause>>) {
 }
 
 fn pause(mut next_pause: ResMut<NextState<Pause>>, mut app_exit_ew: EventWriter<AppExit>) {
-    app_exit_ew.write(AppExit::Success);
     next_pause.set(Pause(true));
 }
 
@@ -51,10 +50,18 @@ fn spawn_pause_overlay(mut commands: Commands) {
     ));
 }
 
-fn open_pause_menu(mut next_menu: ResMut<NextState<Menu>>) {
+fn open_pause_menu(
+    mut next_menu: ResMut<NextState<Menu>>,
+    mut window: Single<&mut Window, With<PrimaryWindow>>,
+) {
     next_menu.set(Menu::Pause);
+    window.cursor_options.visible = true;
 }
 
-fn close_menu(mut next_menu: ResMut<NextState<Menu>>) {
+fn close_menu(
+    mut next_menu: ResMut<NextState<Menu>>,
+    mut window: Single<&mut Window, With<PrimaryWindow>>,
+) {
     next_menu.set(Menu::None);
+    window.cursor_options.visible = false;
 }
