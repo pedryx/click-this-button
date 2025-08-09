@@ -1,4 +1,5 @@
 use bevy::{asset::{io::Reader, AssetLoader, AsyncReadExt, LoadContext}, prelude::*};
+use strum_macros::EnumString;
 use thiserror::Error;
 use itertools::Itertools;
 
@@ -12,11 +13,14 @@ pub(super) fn plugin(app: &mut App) {
         .add_systems(Update, update_game_sequence.run_if(in_state(Screen::Gameplay)));
 }
 
-#[derive(States, Debug, Hash, Eq, PartialEq, Clone, Default, Copy)]
+#[derive(States, Debug, Hash, Eq, PartialEq, Clone, Default, Copy, EnumString)]
+#[strum(serialize_all = "title_case")]
+#[strum(ascii_case_insensitive)]
 pub enum SpawnMechanic {
     #[default]
     None,
     Button,
+    ButtonTimeBar,
     Timer,
 }
 
@@ -68,23 +72,13 @@ impl AssetLoader for ActionSequenceAssetLoader {
             .map(|l| l.trim())
             .filter(|l| !(l.is_empty() || l.starts_with("#")))
             .map(|l| l.split('|').map(|t| t.trim()).collect_tuple().unwrap())
-            .map(|(time, action_type, content)| {
-                let time = time.parse().unwrap();
-                let action_type = match action_type {
+            .map(|(time, action_type, content)| Action {
+                time: time.parse().unwrap(),
+                action_type: match action_type {
                     "T" => ActionType::ChangeText(content.into()),
-                    "M" => {
-                        let mechanic_type = match content {
-                            "button" => SpawnMechanic::Button,
-                            "timer" => SpawnMechanic::Timer,
-                            _ => panic!("Invalid mechanic type!"),
-                        };
-
-                        ActionType::SpawnMechanic(mechanic_type)
-                    },
+                    "M" => ActionType::SpawnMechanic(content.parse::<SpawnMechanic>().unwrap()),
                     _ => panic!("Invalid action type."),
-                };
-
-                Action { time, action_type }
+                },
             }).collect_vec();
 
         Ok(ActionSequence(actions))

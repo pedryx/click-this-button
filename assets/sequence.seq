@@ -1,9 +1,9 @@
 # start
 0 | T | You're the red dot. Move with your mouse.
-3 | T | Your purpose in this life? Click the button.
+3 | T | Your purpose in this life? Click this button.
 0 | M | button
-4 | T | Just one tiny rule: Do it every 10 second, or you die.
-# 0 | M | button life bar
+4 | T | Just one tiny rule: Do it every 5 second, or you die.
+0 | M | button time bar
 5 | T | Have fun! :)
 0 | M | timer
 5 | T |

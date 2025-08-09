@@ -22,6 +22,8 @@ bevy-inspector-egui = "0.32.0"
 inline_tweak = "1.2.2"
 thiserror = "2.0.12"
 itertools = "0.14.0"
+strum = "0.27.2"
+strum_macros = "0.27.2"
 
 # Your web builds will start failing if you add a dependency that pulls in `getrandom` v0.3+.
 # To fix this, you should tell `getrandom` to use the `wasm_js` backend on Wasm.
