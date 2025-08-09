@@ -15,7 +15,7 @@ use crate::{
 
 const BUTTON_SIZE: f32 = 96.0;
 const BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
-const BUTTON_Z: f32 = 50.0;
+pub const BUTTON_Z: f32 = 50.0;
 
 const TEXT_SIZE: f32 = 32.0;
 const TEXT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.0);
@@ -24,7 +24,7 @@ const TIME_BAR_DURATION: f32 = 5.0;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button)
-        .add_systems(OnEnter(SpawnMechanic::ButtonTimeBar), spawn_button_time_bar)
+        .add_systems(OnEnter(SpawnMechanic::ButtonTime), spawn_button_time_bar)
         .add_systems(
             Update,
             (update_button_time, handle_button_click).in_set(PausableSystems),
@@ -35,7 +35,7 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 #[derive(Event)]
-struct OnButtonClicked;
+pub struct OnButtonClicked;
 
 #[derive(Component)]
 pub struct GameButton;
@@ -92,7 +92,10 @@ fn spawn_button_time_bar(mut commands: Commands) {
         Transform::from_xyz(0.0, -BUTTON_SIZE * 1.5, BUTTON_Z),
         ButtonTimeBar,
         StateScoped(Screen::Gameplay),
-        Visibility::default(),
+        Pickable {
+            should_block_lower: false,
+            ..default()
+        },
     ));
 }
 

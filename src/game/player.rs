@@ -16,7 +16,6 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Screen::Gameplay), spawn_player)
         .add_systems(OnExit(Screen::Gameplay), show_cursor)
         .add_systems(Update, move_player.in_set(PausableSystems));
-        //.add_systems(PostUpdate, create_click_effect2.in_set(PausableSystems));
 }
 
 #[derive(Component, Default)]
@@ -52,12 +51,14 @@ fn spawn_player(
     ));
 
     // spawn non-target click mesh
-    commands.spawn((
-        Mesh2d(meshes.add(Rectangle::new(window.width(), window.height()))),
-        MeshMaterial2d(materials.add(Color::linear_rgba(0.0, 0.0, 0.0, 0.0))),
-        StateScoped(Screen::Gameplay),
-        Transform::from_xyz(0.0, 0.0, -1000.0),
-    )).observe(create_click_effect);
+    commands
+        .spawn((
+            Mesh2d(meshes.add(Rectangle::new(window.width(), window.height()))),
+            MeshMaterial2d(materials.add(Color::linear_rgba(0.0, 0.0, 0.0, 0.0))),
+            StateScoped(Screen::Gameplay),
+            Transform::from_xyz(0.0, 0.0, -1000.0),
+        ))
+        .observe(create_click_effect);
 }
 
 fn move_player(
@@ -84,7 +85,6 @@ fn create_click_effect(
     trigger: Trigger<Pointer<Click>>,
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-
 ) {
     let handle = asset_server.load("audio/sound_effects/click.ogg");
     commands.spawn((Name::new("Cursor click sound"), sound_effect(handle, 0.1)));

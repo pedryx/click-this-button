@@ -16,7 +16,7 @@ pub struct OnBarFull {
 }
 
 #[derive(Component, Default)]
-#[require(BarLayout, BarBehavior, BarEntities, Transform)]
+#[require(BarLayout, BarBehavior, BarEntities, Visibility, Transform)]
 pub struct Bar {
     pub min: f32,
     pub max: f32,

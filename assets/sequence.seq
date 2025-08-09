@@ -1,14 +1,23 @@
-# start
-0 | T | You're the red dot. Move with your mouse.
-3 | T | Your purpose in this life? Click this button.
-0 | M | button
-4 | T | Just one tiny rule: Do it every 5 second, or you die.
-0 | M | button time bar
-5 | T | Have fun! :)
-0 | M | timer
-5 | T |
+ 0 | M | durability
 
-# attack of rectangle - 00:05
-5 | T | Oh no! Evil hexagons are attacking, defend the button.
-0 | M | hexagons
-5 | T |
+# start
+ 0 | T | You're the red dot. Move with your mouse.
+ 3 | T | Your purpose in this life? Click this button.
+ 0 | M | button
+ 4 | T | Just one tiny rule: Do it every 5 second, or you die.
+ 0 | M | button time
+ 5 | T | Have fun! :)
+ 0 | M | timer
+ 5 | T |
+
+# durability bar - 00:05
+ 5 | T | Each click decreases button durability.
+ 0 | M | durability
+#  5 | T | You can repair the button by clicking on the 'FIX' box.
+#  0 | M | fix box
+#  5 | T |
+
+# hexagons - 00:20
+# 10 | T | Oh no! Evil hexagons are attacking, defend the button.
+#  0 | M | hexagons
+#  5 | T |

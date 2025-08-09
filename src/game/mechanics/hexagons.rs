@@ -2,7 +2,9 @@ use bevy::{prelude::*, window::PrimaryWindow};
 use rand::Rng;
 
 use crate::{
-    audio::sound_effect, game::{game_sequencer::SpawnMechanic, mechanics::button::GameButton, player::Player}, PausableSystems
+    PausableSystems,
+    audio::sound_effect,
+    game::{game_sequencer::SpawnMechanic, mechanics::button::GameButton, player::Player},
 };
 
 const HEXAGON_SPAWN_INTERVAL: f32 = 2.5;
@@ -21,7 +23,8 @@ pub(super) fn plugin(app: &mut App) {
         .add_systems(
             Update,
             (spawn_hexagons, move_hexagon).in_set(PausableSystems),
-        ).add_observer(create_hexagon_destroyed_effect);
+        )
+        .add_observer(create_hexagon_destroyed_effect);
 }
 
 #[derive(Event)]
@@ -146,12 +149,12 @@ fn create_hexagon_destroyed_effect(
         let position = trigger.event().location + relative_position;
         let rotation = rng.random_range((0.0)..(2.0 * std::f32::consts::PI));
 
-
         commands.spawn((
             Name::new("Fragment"),
             Mesh2d(fragment_handles.mesh.clone()),
             MeshMaterial2d(fragment_handles.material.clone()),
-            Transform::from_translation(position.extend(FRAGMENT_Z)).with_rotation(Quat::from_rotation_z(rotation)),
+            Transform::from_translation(position.extend(FRAGMENT_Z))
+                .with_rotation(Quat::from_rotation_z(rotation)),
             Pickable {
                 should_block_lower: false,
                 ..default()

@@ -23,8 +23,9 @@ pub enum SpawnMechanic {
     #[default]
     None,
     Button,
-    ButtonTimeBar,
+    ButtonTime,
     Timer,
+    Durability,
     Hexagons,
 }
 

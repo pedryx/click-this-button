@@ -42,10 +42,7 @@ impl Plugin for AppPlugin {
                     ..default()
                 }),
         );
-        app.add_plugins((
-            SimpleSubsecondPlugin::default(),
-            MeshPickingPlugin,
-        ));
+        app.add_plugins((SimpleSubsecondPlugin::default(), MeshPickingPlugin));
 
         app.add_plugins((
             asset_tracking::plugin,
