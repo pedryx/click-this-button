@@ -6,7 +6,7 @@ use itertools::Itertools;
 use strum_macros::EnumString;
 use thiserror::Error;
 
-use crate::{PausableSystems, game::guide::GuideText, screens::Screen};
+use crate::{PausableSystems, audio::sound_effect, game::guide::GuideText, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
     app.init_state::<GameMechanic>()
@@ -107,6 +107,8 @@ fn load_action_sequence(mut commands: Commands, asset_server: Res<AssetServer>) 
 }
 
 fn update_game_sequence(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
     mut guide_text: Single<&mut Text, With<GuideText>>,
     mut state: ResMut<SequencerState>,
     mut spawn_mechanic: ResMut<NextState<GameMechanic>>,
@@ -134,7 +136,14 @@ fn update_game_sequence(
 
     // invoke action
     match &action.action_type {
-        ActionType::ChangeText(text) => guide_text.0 = text.into(),
+        ActionType::ChangeText(text) => {
+            guide_text.0 = text.into();
+
+            if !guide_text.0.is_empty() {
+                let handle = asset_server.load("audio/sound_effects/new_text.ogg");
+                commands.spawn((Name::new("New text sound"), sound_effect(handle, 0.2)));
+            }
+        }
         ActionType::SpawnMechanic(mechanic) => spawn_mechanic.set(*mechanic),
     }
 }
