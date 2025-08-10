@@ -7,11 +7,11 @@ use crate::{
     game::{game_sequencer::SpawnMechanic, mechanics::button::GameButton, player::Player},
 };
 
-const HEXAGON_SPAWN_INTERVAL: f32 = 2.5;
-const HEXAGON_SIZE: f32 = 24.0;
-const HEXAGON_COLOR: Color = Color::linear_rgb(0.0, 0.0, 1.0);
-const HEXAGON_Z: f32 = 80.0;
-const HEXAGON_SPEED: f32 = 128.0;
+const TRIANGLE_SPAWN_INTERVAL: f32 = 2.5;
+const TRIANGLE_SIZE: f32 = 48.0;
+const TRIANGLE_COLOR: Color = Color::linear_rgb(0.0, 0.0, 1.0);
+const TRIANGLE_Z: f32 = 80.0;
+const TRIANGLE_SPEED: f32 = 128.0;
 
 const FRAGMENT_SIZE: f32 = 12.0;
 const FRAGMENTS_PER_HEXAGON: usize = 8;
@@ -19,27 +19,27 @@ const FRAGMENT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.3);
 const FRAGMENT_Z: f32 = 0.0;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(SpawnMechanic::Hexagons), spawn_hexagon_spawner)
+    app.add_systems(OnEnter(SpawnMechanic::Triangles), spawn_triangle_spawner)
         .add_systems(
             Update,
-            (spawn_hexagons, move_hexagon).in_set(PausableSystems),
+            (spawn_triangles, move_triangles).in_set(PausableSystems),
         )
-        .add_observer(create_hexagon_destroyed_effect);
+        .add_observer(create_triangle_destroyed_effect);
 }
 
 #[derive(Event)]
-struct OnHexagonDestroyed {
+struct OnTriangleDestroyed {
     location: Vec2,
 }
 
 #[derive(Component)]
-struct Hexagon;
+struct Triangle;
 
 #[derive(Resource)]
-struct HexagonSpawner {
+struct TriangleSpawner {
     spawn_timer: Timer,
-    hexagon_mesh: Handle<Mesh>,
-    hexagon_material: Handle<ColorMaterial>,
+    triangle_mesh: Handle<Mesh>,
+    triangle_material: Handle<ColorMaterial>,
 }
 
 #[derive(Resource)]
@@ -48,15 +48,19 @@ struct FragmentHandles {
     material: Handle<ColorMaterial>,
 }
 
-fn spawn_hexagon_spawner(
+fn spawn_triangle_spawner(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    commands.insert_resource(HexagonSpawner {
-        spawn_timer: Timer::from_seconds(HEXAGON_SPAWN_INTERVAL, TimerMode::Repeating),
-        hexagon_mesh: meshes.add(RegularPolygon::new(HEXAGON_SIZE, 6)),
-        hexagon_material: materials.add(HEXAGON_COLOR),
+    commands.insert_resource(TriangleSpawner {
+        spawn_timer: Timer::from_seconds(TRIANGLE_SPAWN_INTERVAL, TimerMode::Repeating),
+        triangle_mesh: meshes.add(Triangle2d::new(
+            vec2(0.0, 0.0),
+            vec2(-TRIANGLE_SIZE, TRIANGLE_SIZE * 0.6),
+            vec2(-TRIANGLE_SIZE, -TRIANGLE_SIZE * 0.6),
+        )),
+        triangle_material: materials.add(TRIANGLE_COLOR),
     });
 
     commands.insert_resource(FragmentHandles {
@@ -69,10 +73,10 @@ fn spawn_hexagon_spawner(
     });
 }
 
-fn spawn_hexagons(
+fn spawn_triangles(
     mut commands: Commands,
     window: Single<&Window, With<PrimaryWindow>>,
-    spawner: Option<ResMut<HexagonSpawner>>,
+    spawner: Option<ResMut<TriangleSpawner>>,
     time: Res<Time>,
 ) {
     let Some(mut spawner) = spawner else {
@@ -86,31 +90,31 @@ fn spawn_hexagons(
 
     let mut rng = rand::rng();
     let spawn_position = vec2(
-        window.width() / 2.0,
+        window.width() * 0.7,
         rng.random_range((-window.height() * 0.4)..(window.height() * 0.4)),
     );
 
     commands
         .spawn((
             Name::new("Hexagon"),
-            Mesh2d(spawner.hexagon_mesh.clone()),
-            MeshMaterial2d(spawner.hexagon_material.clone()),
-            Transform::from_translation(spawn_position.extend(HEXAGON_Z)),
+            Mesh2d(spawner.triangle_mesh.clone()),
+            MeshMaterial2d(spawner.triangle_material.clone()),
+            Transform::from_translation(spawn_position.extend(TRIANGLE_Z)),
             Pickable::default(),
-            Hexagon,
+            Triangle,
         ))
         .observe(destroy_clicked_hexagon);
 }
 
-fn move_hexagon(
-    mut query: Query<&mut Transform, (With<Hexagon>, Without<GameButton>)>,
+fn move_triangles(
+    mut query: Query<&mut Transform, (With<Triangle>, Without<GameButton>)>,
     button_transform: Single<&Transform, With<GameButton>>,
     time: Res<Time>,
 ) {
     for mut transform in query.iter_mut() {
         let direction =
             (button_transform.translation.xy() - transform.translation.xy()).normalize_or_zero();
-        let delta = direction * HEXAGON_SPEED * time.delta_secs();
+        let delta = direction * TRIANGLE_SPEED * time.delta_secs();
 
         transform.translation += delta.extend(0.0);
         transform.rotation = Quat::from_rotation_z(direction.to_angle());
@@ -119,21 +123,21 @@ fn move_hexagon(
 
 fn destroy_clicked_hexagon(
     trigger: Trigger<Pointer<Click>>,
-    query: Query<&Transform, With<Hexagon>>,
+    query: Query<&Transform, With<Triangle>>,
     mut player: Single<&mut Player>,
     mut commands: Commands,
 ) {
     let transform = query.get(trigger.target()).unwrap();
 
     player.clicked_on_target = true;
-    commands.trigger(OnHexagonDestroyed {
+    commands.trigger(OnTriangleDestroyed {
         location: transform.translation.xy(),
     });
     commands.entity(trigger.target()).despawn();
 }
 
-fn create_hexagon_destroyed_effect(
-    trigger: Trigger<OnHexagonDestroyed>,
+fn create_triangle_destroyed_effect(
+    trigger: Trigger<OnTriangleDestroyed>,
     mut commands: Commands,
     fragment_handles: Res<FragmentHandles>,
     asset_server: Res<AssetServer>,
@@ -143,8 +147,8 @@ fn create_hexagon_destroyed_effect(
     // spawn fragments
     for _ in 0..FRAGMENTS_PER_HEXAGON {
         let relative_position = vec2(
-            rng.random_range((-HEXAGON_SIZE / 2.0)..(HEXAGON_SIZE / 2.0)),
-            rng.random_range((-HEXAGON_SIZE / 2.0)..(HEXAGON_SIZE / 2.0)),
+            rng.random_range((-TRIANGLE_SIZE * 0.3)..(TRIANGLE_SIZE * 0.3)),
+            rng.random_range((-TRIANGLE_SIZE * 0.3)..(TRIANGLE_SIZE * 0.3)),
         );
         let position = trigger.event().location + relative_position;
         let rotation = rng.random_range((0.0)..(2.0 * std::f32::consts::PI));
