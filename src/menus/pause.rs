@@ -21,7 +21,8 @@ fn spawn_pause_menu(mut commands: Commands) {
             widget::header("Game paused"),
             widget::button("Continue", close_menu),
             widget::button("Settings", open_settings_menu),
-            widget::button("Quit to title", quit_to_title),
+            widget::button("Restart", restart),
+            widget::button("Exit", exit),
         ],
     ));
 }
@@ -34,10 +35,14 @@ fn close_menu(_: Trigger<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>
     next_menu.set(Menu::None);
 }
 
-fn quit_to_title(_: Trigger<Pointer<Click>>, mut next_screen: ResMut<NextState<Screen>>) {
-    next_screen.set(Screen::Title);
-}
-
 fn go_back(mut next_menu: ResMut<NextState<Menu>>) {
     next_menu.set(Menu::None);
+}
+
+fn restart(_: Trigger<Pointer<Click>>, mut next_screen: ResMut<NextState<Screen>>) {
+    next_screen.set(Screen::Loading);
+}
+
+fn exit(_: Trigger<Pointer<Click>>, mut app_exit_ew: EventWriter<AppExit>) {
+    app_exit_ew.write(AppExit::Success);
 }

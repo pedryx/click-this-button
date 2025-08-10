@@ -2,9 +2,15 @@ use bevy::{prelude::*, window::PrimaryWindow};
 use rand::Rng;
 
 use crate::{
-    audio::sound_effect, game::{
-        game_sequencer::SpawnMechanic, mechanics::the_button::{TheButton, THE_BUTTON_SIZE}, player::Player, OnGameOver
-    }, screens::Screen, PausableSystems
+    PausableSystems,
+    audio::sound_effect,
+    game::{
+        GameOver,
+        game_sequencer::GameMechanic,
+        mechanics::the_button::{THE_BUTTON_SIZE, TheButton},
+        player::Player,
+    },
+    screens::Screen,
 };
 
 const TRIANGLE_SPAWN_INTERVAL: f32 = 2.5;
@@ -19,7 +25,7 @@ const FRAGMENT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.3);
 const FRAGMENT_Z: f32 = 0.0;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(SpawnMechanic::Triangles), spawn_triangle_spawner)
+    app.add_systems(OnEnter(GameMechanic::Triangles), spawn_triangle_spawner)
         .add_systems(
             Update,
             (spawn_triangles, move_triangles).in_set(PausableSystems),
@@ -74,9 +80,7 @@ fn spawn_triangle_spawner(
     });
 }
 
-fn despawn_triangle_spawner(
-    mut commands: Commands,
-) {
+fn despawn_triangle_spawner(mut commands: Commands) {
     commands.remove_resource::<TriangleSpawner>();
     commands.remove_resource::<FragmentHandles>();
 }
@@ -134,7 +138,7 @@ fn move_triangles(
             .xy()
             .distance(button_transform.translation.xy());
         if distance <= THE_BUTTON_SIZE {
-            commands.trigger(OnGameOver(SpawnMechanic::Triangles));
+            commands.trigger(GameOver(GameMechanic::Triangles));
             return;
         }
     }

@@ -1,6 +1,11 @@
 use bevy::prelude::*;
 
-use crate::{asset_tracking::LoadResource, audio::music, game::game_sequencer::SpawnMechanic, screens::{game_over::GameOverData, Screen}};
+use crate::{
+    asset_tracking::LoadResource,
+    audio::music,
+    game::game_sequencer::GameMechanic,
+    screens::{Screen, game_over::GameOverData},
+};
 
 mod bar;
 pub mod game_sequencer;
@@ -20,11 +25,12 @@ pub(super) fn plugin(app: &mut App) {
             juice::plugin,
         ))
         .add_systems(OnEnter(Screen::Gameplay), start_soundtrack)
+        .add_systems(OnEnter(GameMechanic::Victory), on_victory)
         .add_observer(on_game_over);
 }
 
 #[derive(Event)]
-pub struct OnGameOver(SpawnMechanic);
+pub struct GameOver(GameMechanic);
 
 #[derive(Resource, Asset, Clone, Reflect)]
 struct Soundtrack(Handle<AudioSource>);
@@ -37,7 +43,7 @@ impl FromWorld for Soundtrack {
 }
 
 fn on_game_over(
-    trigger: Trigger<OnGameOver>,
+    trigger: Trigger<GameOver>,
     mut game_over_data: ResMut<GameOverData>,
     mut next_screen: ResMut<NextState<Screen>>,
 ) {
@@ -51,4 +57,8 @@ fn start_soundtrack(mut commands: Commands, soundtrack: Res<Soundtrack>) {
         StateScoped(Screen::Gameplay),
         music(soundtrack.0.clone(), 0.8),
     ));
+}
+
+fn on_victory(mut commands: Commands) {
+    commands.trigger(GameOver(GameMechanic::Victory));
 }

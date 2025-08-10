@@ -9,7 +9,7 @@ use thiserror::Error;
 use crate::{PausableSystems, game::guide::GuideText, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
-    app.init_state::<SpawnMechanic>()
+    app.init_state::<GameMechanic>()
         .init_asset::<ActionSequence>()
         .init_asset_loader::<ActionSequenceAssetLoader>()
         .add_systems(OnEnter(Screen::Gameplay), load_action_sequence)
@@ -19,7 +19,7 @@ pub(super) fn plugin(app: &mut App) {
 #[derive(States, Debug, Hash, Eq, PartialEq, Clone, Default, Copy, EnumString)]
 #[strum(serialize_all = "title_case")]
 #[strum(ascii_case_insensitive)]
-pub enum SpawnMechanic {
+pub enum GameMechanic {
     #[default]
     None,
     Button,
@@ -29,11 +29,12 @@ pub enum SpawnMechanic {
     Fix,
     Triangles,
     Square,
+    Victory,
 }
 
 enum ActionType {
     ChangeText(String),
-    SpawnMechanic(SpawnMechanic),
+    SpawnMechanic(GameMechanic),
 }
 
 struct Action {
@@ -84,7 +85,7 @@ impl AssetLoader for ActionSequenceAssetLoader {
                 time: time.parse().unwrap(),
                 action_type: match action_type {
                     "T" => ActionType::ChangeText(content.into()),
-                    "M" => ActionType::SpawnMechanic(content.parse::<SpawnMechanic>().unwrap()),
+                    "M" => ActionType::SpawnMechanic(content.parse::<GameMechanic>().unwrap()),
                     _ => panic!("Invalid action type."),
                 },
             })
@@ -108,7 +109,7 @@ fn load_action_sequence(mut commands: Commands, asset_server: Res<AssetServer>) 
 fn update_game_sequence(
     mut guide_text: Single<&mut Text, With<GuideText>>,
     mut state: ResMut<SequencerState>,
-    mut spawn_mechanic: ResMut<NextState<SpawnMechanic>>,
+    mut spawn_mechanic: ResMut<NextState<GameMechanic>>,
     action_sequences: Res<Assets<ActionSequence>>,
     time: Res<Time>,
 ) {

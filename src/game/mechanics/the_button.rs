@@ -4,9 +4,9 @@ use crate::{
     PausableSystems,
     audio::sound_effect,
     game::{
-        OnGameOver,
+        GameOver,
         bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
-        game_sequencer::SpawnMechanic,
+        game_sequencer::GameMechanic,
         juice::{circles::SpawnCircles, pulse_effect::PulseEffect},
         player::{CLICK_PARTICLES_Z, Player},
     },
@@ -23,8 +23,8 @@ const TEXT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.0);
 const TIME_BAR_DURATION: f32 = 6.0;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button)
-        .add_systems(OnEnter(SpawnMechanic::ButtonTime), spawn_button_time_bar)
+    app.add_systems(OnEnter(GameMechanic::Button), spawn_button)
+        .add_systems(OnEnter(GameMechanic::ButtonTime), spawn_button_time_bar)
         .add_systems(Update, update_button_time.in_set(PausableSystems))
         .add_observer(on_button_time_up);
 }
@@ -108,7 +108,7 @@ fn on_button_time_up(
     if trigger.event().sender != *time_bar_entity {
         return;
     }
-    commands.trigger(OnGameOver(SpawnMechanic::ButtonTime));
+    commands.trigger(GameOver(GameMechanic::ButtonTime));
 }
 
 fn handle_button_click(

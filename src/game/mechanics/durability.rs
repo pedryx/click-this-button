@@ -3,9 +3,9 @@ use bevy::{prelude::*, window::PrimaryWindow};
 use crate::{
     audio::sound_effect,
     game::{
-        OnGameOver,
+        GameOver,
         bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
-        game_sequencer::SpawnMechanic,
+        game_sequencer::GameMechanic,
         juice::{circles::SpawnCircles, pulse_effect::PulseEffect},
         mechanics::the_button::{OnButtonClicked, THE_BUTTON_Z},
         player::CLICK_PARTICLES_Z,
@@ -22,8 +22,8 @@ const TEXT_SIZE: f32 = 32.0;
 const TEXT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.0);
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(SpawnMechanic::Durability), spawn_durability_bar)
-        .add_systems(OnEnter(SpawnMechanic::Fix), spawn_fix_button)
+    app.add_systems(OnEnter(GameMechanic::Durability), spawn_durability_bar)
+        .add_systems(OnEnter(GameMechanic::Fix), spawn_fix_button)
         .add_observer(update_durability)
         .add_observer(on_durability_zero);
 }
@@ -122,7 +122,7 @@ fn on_durability_zero(
     if trigger.event().sender != *durability_bar_entity {
         return;
     }
-    commands.trigger(OnGameOver(SpawnMechanic::Durability));
+    commands.trigger(GameOver(GameMechanic::Durability));
 }
 
 fn on_fix_button_click(

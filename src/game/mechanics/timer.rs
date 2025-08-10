@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{PausableSystems, game::game_sequencer::SpawnMechanic, screens::Screen};
+use crate::{PausableSystems, game::game_sequencer::GameMechanic, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(SpawnMechanic::Timer), spawn_timer)
+    app.add_systems(OnEnter(GameMechanic::Timer), spawn_timer)
         .add_systems(
             Update,
             (
