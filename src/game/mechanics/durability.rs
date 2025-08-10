@@ -7,14 +7,14 @@ use crate::{
         bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
         game_sequencer::SpawnMechanic,
         juice::{circles::SpawnCircles, pulse_effect::PulseEffect},
-        mechanics::button::{BUTTON_Z, OnButtonClicked},
+        mechanics::button::{OnButtonClicked, THE_BUTTON_Z},
         player::CLICK_PARTICLES_Z,
     },
     screens::Screen,
 };
 
-const MAX_DURABILITY: f32 = 10.0;
-const CLICK_DAMAGE: f32 = 2.0;
+const MAX_DURABILITY: f32 = 8.0;
+const CLICK_DAMAGE: f32 = 1.0;
 const BAR_COLOR: Color = Color::linear_rgb(1.0, 1.0, 0.0);
 
 const FIX_BUTTON_SIZE: f32 = 40.0;
@@ -51,7 +51,11 @@ fn spawn_durability_bar(mut commands: Commands, window: Single<&Window, With<Pri
             trigger_on_empty: true,
             ..default()
         },
-        Transform::from_xyz(window.width() * -0.24, window.height() * -0.42, BUTTON_Z),
+        Transform::from_xyz(
+            window.width() * -0.24,
+            window.height() * -0.42,
+            THE_BUTTON_Z,
+        ),
         StateScoped(Screen::Gameplay),
         DurabilityBar,
         Pickable {
@@ -73,7 +77,11 @@ fn spawn_fix_button(
             Name::new("Fix button"),
             Mesh2d(meshes.add(Circle::new(FIX_BUTTON_SIZE))),
             MeshMaterial2d(materials.add(BAR_COLOR)),
-            Transform::from_xyz(window.width() * -0.455, window.height() * -0.42, BUTTON_Z),
+            Transform::from_xyz(
+                window.width() * -0.455,
+                window.height() * -0.42,
+                THE_BUTTON_Z,
+            ),
             StateScoped(Screen::Gameplay),
             PulseEffect {
                 min: 0.98,

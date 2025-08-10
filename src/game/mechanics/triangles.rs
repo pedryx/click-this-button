@@ -4,7 +4,12 @@ use rand::Rng;
 use crate::{
     PausableSystems,
     audio::sound_effect,
-    game::{game_sequencer::SpawnMechanic, mechanics::button::GameButton, player::Player},
+    game::{
+        OnGameOver,
+        game_sequencer::SpawnMechanic,
+        mechanics::button::{GameButton, THE_BUTTON_SIZE},
+        player::Player,
+    },
 };
 
 const TRIANGLE_SPAWN_INTERVAL: f32 = 2.5;
@@ -107,6 +112,7 @@ fn spawn_triangles(
 }
 
 fn move_triangles(
+    mut commands: Commands,
     mut query: Query<&mut Transform, (With<Triangle>, Without<GameButton>)>,
     button_transform: Single<&Transform, With<GameButton>>,
     time: Res<Time>,
@@ -118,6 +124,15 @@ fn move_triangles(
 
         transform.translation += delta.extend(0.0);
         transform.rotation = Quat::from_rotation_z(direction.to_angle());
+
+        let distance = transform
+            .translation
+            .xy()
+            .distance(button_transform.translation.xy());
+        if distance <= THE_BUTTON_SIZE {
+            commands.trigger(OnGameOver);
+            return;
+        }
     }
 }
 

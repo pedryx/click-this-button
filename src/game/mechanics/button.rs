@@ -13,14 +13,14 @@ use crate::{
     screens::Screen,
 };
 
-const BUTTON_SIZE: f32 = 96.0;
-const BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
-pub const BUTTON_Z: f32 = 50.0;
+pub const THE_BUTTON_Z: f32 = 50.0;
+pub const THE_BUTTON_SIZE: f32 = 96.0;
+const THE_BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
 
 const TEXT_SIZE: f32 = 32.0;
 const TEXT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.0);
 
-const TIME_BAR_DURATION: f32 = 5.0;
+const TIME_BAR_DURATION: f32 = 6.0;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button)
@@ -52,9 +52,9 @@ fn spawn_button(
     commands
         .spawn((
             Name::new("Button"),
-            Mesh2d(meshes.add(Circle::new(BUTTON_SIZE))),
-            MeshMaterial2d(materials.add(BUTTON_COLOR)),
-            Transform::from_xyz(0.0, 0.0, BUTTON_Z),
+            Mesh2d(meshes.add(Circle::new(THE_BUTTON_SIZE))),
+            MeshMaterial2d(materials.add(THE_BUTTON_COLOR)),
+            Transform::from_xyz(0.0, 0.0, THE_BUTTON_Z),
             GameButton,
             StateScoped(Screen::Gameplay),
             PulseEffect::default(),
@@ -82,14 +82,14 @@ fn spawn_button_time_bar(mut commands: Commands) {
             ..default()
         },
         BarLayout {
-            color: BUTTON_COLOR,
+            color: THE_BUTTON_COLOR,
             ..default()
         },
         BarBehavior {
             trigger_on_empty: true,
             ..default()
         },
-        Transform::from_xyz(0.0, -BUTTON_SIZE * 1.5, BUTTON_Z),
+        Transform::from_xyz(0.0, -THE_BUTTON_SIZE * 1.5, THE_BUTTON_Z),
         ButtonTimeBar,
         StateScoped(Screen::Gameplay),
         Pickable {
@@ -126,7 +126,7 @@ fn handle_button_click(
         .translation
         .truncate()
         .distance(button_transform.translation.truncate());
-    if mouse.just_pressed(MouseButton::Left) && distance <= BUTTON_SIZE {
+    if mouse.just_pressed(MouseButton::Left) && distance <= THE_BUTTON_SIZE {
         player.clicked_on_target = true;
         commands.trigger(OnButtonClicked);
     }
@@ -149,9 +149,9 @@ fn make_effect_on_button_click(
     commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.4)));
     commands.trigger(SpawnCircles {
         location: transform.translation.xy().extend(CLICK_PARTICLES_Z),
-        start_size: BUTTON_SIZE * 1.1,
-        end_size: BUTTON_SIZE * 1.4,
-        start_color: BUTTON_COLOR.to_linear(),
+        start_size: THE_BUTTON_SIZE * 1.1,
+        end_size: THE_BUTTON_SIZE * 1.4,
+        start_color: THE_BUTTON_COLOR.to_linear(),
         thickness: 4.0,
         spacing: 8.0,
         ..default()
