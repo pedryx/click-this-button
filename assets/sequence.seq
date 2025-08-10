@@ -18,8 +18,7 @@
 # triangles - 00:20
 10 | T | Oh no, triangles!
  0 | M | triangles
- 5 | T | They're getting in the way of THE BUTTON. Click to destroy them.
- 5 | T | If a triangle touches THE BUTTON, it breaks. Don't let that happen.
+ 5 | T | They're trying to break THE BUTTON. Click them to bits!
 10 | T |
 
 # square - 00:50
@@ -28,9 +27,10 @@
 10 | T |
 
 # pentagon - 01:05
-# 10 | T | Run! A pentagon is coming for you. If it touches you, it's game over.
-#  0 | M | pentagon
-# 10 | T |
+10 | T | RUN! That pentagon is coming for YOU.
+ 0 | M | pentagon
+ 5 | T | If it catches you, it's game over. Seriously, don't let it touch you.
+10 | T |
 
 # hexagon - 01:25
 # 10 | T | A wild hexagon appeared! When it grows, everything speeds up.
@@ -44,7 +44,7 @@
 # 10 | T |
 
 # star - 02:15
-# 10 | T | Hey look that's the star button.
+# 10 | T | Is that... the STAR button?
 #  0 | M | star
 #  5 | T | Click it 20 times and you might just end this nightmare.
 #  5 | T |
@@ -56,6 +56,7 @@
 
 
 # Temp - victory in case star victory will not be implemented in time
-10 | T | Victory is near...
-10 | T | You are almost there...
+10 | T | Victory is near!
+10 | T | Don't mess it up now!
+10 | T | You're so close!
 10 | M | Victory

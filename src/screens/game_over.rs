@@ -22,6 +22,7 @@ fn spawn_entities(mut commands: Commands, game_over_data: Res<GameOverData>) {
         GameMechanic::ButtonTime => "THE BUTTON was not clicked during the last 6 seconds.",
         GameMechanic::Durability => "THE BUTTON durability reached zero.",
         GameMechanic::Triangles => "THE BUTTON was destroyed by triangle.",
+        GameMechanic::Pentagon => "You were caught by pentagon.",
         GameMechanic::Victory => "CG. You managed to survive the chaos.",
         _ => panic!("Died to unsupported game mechanic."),
     };

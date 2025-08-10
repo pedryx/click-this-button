@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 mod durability;
+mod pentagon;
 mod square;
 mod the_button;
 mod timer;
@@ -13,5 +14,6 @@ pub(super) fn plugin(app: &mut App) {
         durability::plugin,
         triangles::plugin,
         square::plugin,
+        pentagon::plugin,
     ));
 }

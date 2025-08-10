@@ -30,6 +30,7 @@ pub enum GameMechanic {
     Triangles,
     Square,
     Victory,
+    Pentagon,
 }
 
 enum ActionType {
