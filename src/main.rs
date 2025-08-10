@@ -34,7 +34,7 @@ impl Plugin for AppPlugin {
                 })
                 .set(WindowPlugin {
                     primary_window: Window {
-                        title: "Solo Dev".to_string(),
+                        title: "Click this button!".to_string(),
                         fit_canvas_to_parent: true,
                         ..default()
                     }

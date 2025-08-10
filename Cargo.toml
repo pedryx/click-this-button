@@ -1,5 +1,5 @@
 [package]
-name = "solo_dev"
+name = "click_this_button"
 authors = ["Petr Kotáb <petrkotab99@gmail.com>"]
 version = "0.1.0"
 edition = "2024"
