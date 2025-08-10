@@ -4,6 +4,7 @@ mod gameplay;
 mod loading;
 mod splash;
 mod title;
+pub mod game_over;
 
 use bevy::prelude::*;
 
@@ -15,6 +16,7 @@ pub(super) fn plugin(app: &mut App) {
         loading::plugin,
         splash::plugin,
         title::plugin,
+        game_over::plugin,
     ));
 }
 
@@ -28,4 +30,5 @@ pub enum Screen {
     #[default]
     Loading,
     Gameplay,
+    GameOver,
 }

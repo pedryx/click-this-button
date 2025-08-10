@@ -108,7 +108,7 @@ fn on_button_time_up(
     if trigger.event().sender != *time_bar_entity {
         return;
     }
-    commands.trigger(OnGameOver);
+    commands.trigger(OnGameOver(SpawnMechanic::ButtonTime));
 }
 
 fn handle_button_click(

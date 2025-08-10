@@ -122,7 +122,7 @@ fn on_durability_zero(
     if trigger.event().sender != *durability_bar_entity {
         return;
     }
-    commands.trigger(OnGameOver);
+    commands.trigger(OnGameOver(SpawnMechanic::Durability));
 }
 
 fn on_fix_button_click(

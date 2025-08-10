@@ -4,8 +4,7 @@ use bevy::{prelude::*, window::PrimaryWindow};
 use rand::Rng;
 
 use crate::{
-    PausableSystems,
-    game::{game_sequencer::SpawnMechanic, mechanics::the_button::TheButton},
+    game::{game_sequencer::SpawnMechanic, mechanics::the_button::TheButton}, screens::Screen, PausableSystems
 };
 
 const SQUARE_SPAWN_INTERVAL: f32 = 3.0;
@@ -16,7 +15,8 @@ const SQUARE_SPEED: f32 = 1024.0;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Square), spawn_square_spawner)
-        .add_systems(Update, (spawn_square, move_square).in_set(PausableSystems));
+        .add_systems(Update, (spawn_square, move_square).in_set(PausableSystems))
+        .add_systems(OnExit(Screen::Gameplay), despawn_square_spawner);
 }
 
 #[derive(Resource)]
@@ -41,6 +41,12 @@ fn spawn_square_spawner(
         mesh: meshes.add(Rectangle::new(SQUARE_SIZE, SQUARE_SIZE)),
         material: materials.add(SQUARE_COLOR),
     });
+}
+
+fn despawn_square_spawner(
+    mut commands: Commands,
+) {
+    commands.remove_resource::<SquareSpawner>();
 }
 
 fn spawn_square(
@@ -73,6 +79,7 @@ fn spawn_square(
                 ..default()
             },
             Square::default(),
+            StateScoped(Screen::Gameplay),
         ))
         .observe(on_square_drag);
 }

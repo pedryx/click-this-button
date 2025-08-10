@@ -2,14 +2,9 @@ use bevy::{prelude::*, window::PrimaryWindow};
 use rand::Rng;
 
 use crate::{
-    PausableSystems,
-    audio::sound_effect,
-    game::{
-        OnGameOver,
-        game_sequencer::SpawnMechanic,
-        mechanics::the_button::{THE_BUTTON_SIZE, TheButton},
-        player::Player,
-    },
+    audio::sound_effect, game::{
+        game_sequencer::SpawnMechanic, mechanics::the_button::{TheButton, THE_BUTTON_SIZE}, player::Player, OnGameOver
+    }, screens::Screen, PausableSystems
 };
 
 const TRIANGLE_SPAWN_INTERVAL: f32 = 2.5;
@@ -29,7 +24,8 @@ pub(super) fn plugin(app: &mut App) {
             Update,
             (spawn_triangles, move_triangles).in_set(PausableSystems),
         )
-        .add_observer(create_triangle_destroyed_effect);
+        .add_observer(create_triangle_destroyed_effect)
+        .add_systems(OnExit(Screen::Gameplay), despawn_triangle_spawner);
 }
 
 #[derive(Event)]
@@ -78,6 +74,13 @@ fn spawn_triangle_spawner(
     });
 }
 
+fn despawn_triangle_spawner(
+    mut commands: Commands,
+) {
+    commands.remove_resource::<TriangleSpawner>();
+    commands.remove_resource::<FragmentHandles>();
+}
+
 fn spawn_triangles(
     mut commands: Commands,
     window: Single<&Window, With<PrimaryWindow>>,
@@ -101,12 +104,13 @@ fn spawn_triangles(
 
     commands
         .spawn((
-            Name::new("Hexagon"),
+            Name::new("Triangle"),
             Mesh2d(spawner.triangle_mesh.clone()),
             MeshMaterial2d(spawner.triangle_material.clone()),
             Transform::from_translation(spawn_position.extend(TRIANGLE_Z)),
             Pickable::default(),
             Triangle,
+            StateScoped(Screen::Gameplay),
         ))
         .observe(destroy_clicked_hexagon);
 }
@@ -130,7 +134,7 @@ fn move_triangles(
             .xy()
             .distance(button_transform.translation.xy());
         if distance <= THE_BUTTON_SIZE {
-            commands.trigger(OnGameOver);
+            commands.trigger(OnGameOver(SpawnMechanic::Triangles));
             return;
         }
     }
@@ -178,6 +182,7 @@ fn create_triangle_destroyed_effect(
                 should_block_lower: false,
                 ..default()
             },
+            StateScoped(Screen::Gameplay),
         ));
     }
 

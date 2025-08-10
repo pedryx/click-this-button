@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{asset_tracking::LoadResource, audio::music, screens::Screen};
+use crate::{asset_tracking::LoadResource, audio::music, game::game_sequencer::SpawnMechanic, screens::{game_over::GameOverData, Screen}};
 
 mod bar;
-mod game_sequencer;
+pub mod game_sequencer;
 mod guide;
 mod juice;
 mod mechanics;
@@ -24,7 +24,7 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 #[derive(Event)]
-pub struct OnGameOver;
+pub struct OnGameOver(SpawnMechanic);
 
 #[derive(Resource, Asset, Clone, Reflect)]
 struct Soundtrack(Handle<AudioSource>);
@@ -36,8 +36,13 @@ impl FromWorld for Soundtrack {
     }
 }
 
-fn on_game_over(_: Trigger<OnGameOver>, mut app_exit_ew: EventWriter<AppExit>) {
-    app_exit_ew.write(AppExit::Success);
+fn on_game_over(
+    trigger: Trigger<OnGameOver>,
+    mut game_over_data: ResMut<GameOverData>,
+    mut next_screen: ResMut<NextState<Screen>>,
+) {
+    game_over_data.reason = trigger.event().0;
+    next_screen.set(Screen::GameOver);
 }
 
 fn start_soundtrack(mut commands: Commands, soundtrack: Res<Soundtrack>) {
