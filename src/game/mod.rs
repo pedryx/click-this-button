@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     asset_tracking::LoadResource,
-    audio::music,
+    audio::{music, sound_effect},
     game::game_sequencer::GameMechanic,
     screens::{Screen, game_over::GameOverData},
 };
@@ -59,6 +59,8 @@ fn start_soundtrack(mut commands: Commands, soundtrack: Res<Soundtrack>) {
     ));
 }
 
-fn on_victory(mut commands: Commands) {
+fn on_victory(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let handle = asset_server.load("audio/sound_effects/victory.ogg");
+    commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.4)));
     commands.trigger(GameOver(GameMechanic::Victory));
 }
