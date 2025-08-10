@@ -7,7 +7,7 @@ use crate::{
     game::{
         OnGameOver,
         game_sequencer::SpawnMechanic,
-        mechanics::button::{GameButton, THE_BUTTON_SIZE},
+        mechanics::the_button::{THE_BUTTON_SIZE, TheButton},
         player::Player,
     },
 };
@@ -113,8 +113,8 @@ fn spawn_triangles(
 
 fn move_triangles(
     mut commands: Commands,
-    mut query: Query<&mut Transform, (With<Triangle>, Without<GameButton>)>,
-    button_transform: Single<&Transform, With<GameButton>>,
+    mut query: Query<&mut Transform, (With<Triangle>, Without<TheButton>)>,
+    button_transform: Single<&Transform, With<TheButton>>,
     time: Res<Time>,
 ) {
     for mut transform in query.iter_mut() {

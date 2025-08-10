@@ -28,6 +28,7 @@ pub enum SpawnMechanic {
     Durability,
     Fix,
     Triangles,
+    Square,
 }
 
 enum ActionType {

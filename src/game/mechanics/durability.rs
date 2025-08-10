@@ -7,7 +7,7 @@ use crate::{
         bar::{Bar, BarBehavior, BarLayout, OnBarEmpty},
         game_sequencer::SpawnMechanic,
         juice::{circles::SpawnCircles, pulse_effect::PulseEffect},
-        mechanics::button::{OnButtonClicked, THE_BUTTON_Z},
+        mechanics::the_button::{OnButtonClicked, THE_BUTTON_Z},
         player::CLICK_PARTICLES_Z,
     },
     screens::Screen,

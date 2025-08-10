@@ -25,20 +25,15 @@ const TIME_BAR_DURATION: f32 = 6.0;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(SpawnMechanic::Button), spawn_button)
         .add_systems(OnEnter(SpawnMechanic::ButtonTime), spawn_button_time_bar)
-        .add_systems(
-            Update,
-            (update_button_time, handle_button_click).in_set(PausableSystems),
-        )
-        .add_observer(on_button_time_up)
-        .add_observer(make_effect_on_button_click)
-        .add_observer(update_time_bar_on_button_click);
+        .add_systems(Update, update_button_time.in_set(PausableSystems))
+        .add_observer(on_button_time_up);
 }
 
 #[derive(Event)]
 pub struct OnButtonClicked;
 
 #[derive(Component)]
-pub struct GameButton;
+pub struct TheButton;
 
 #[derive(Component)]
 struct ButtonTimeBar;
@@ -55,7 +50,7 @@ fn spawn_button(
             Mesh2d(meshes.add(Circle::new(THE_BUTTON_SIZE))),
             MeshMaterial2d(materials.add(THE_BUTTON_COLOR)),
             Transform::from_xyz(0.0, 0.0, THE_BUTTON_Z),
-            GameButton,
+            TheButton,
             StateScoped(Screen::Gameplay),
             PulseEffect::default(),
         ))
@@ -70,7 +65,9 @@ fn spawn_button(
                 TextLayout::new_with_justify(JustifyText::Center),
                 TextColor(TEXT_COLOR),
             ));
-        });
+        })
+        .observe(handle_button_click)
+        .observe(fill_time_bar_on_button_click);
 }
 
 fn spawn_button_time_bar(mut commands: Commands) {
@@ -115,40 +112,22 @@ fn on_button_time_up(
 }
 
 fn handle_button_click(
-    player: Single<(&Transform, &mut Player)>,
-    button_transform: Single<&Transform, With<GameButton>>,
+    _: Trigger<Pointer<Click>>,
     mut commands: Commands,
-    mouse: Res<ButtonInput<MouseButton>>,
-) {
-    let (transform, mut player) = player.into_inner();
-
-    let distance = transform
-        .translation
-        .truncate()
-        .distance(button_transform.translation.truncate());
-    if mouse.just_pressed(MouseButton::Left) && distance <= THE_BUTTON_SIZE {
-        player.clicked_on_target = true;
-        commands.trigger(OnButtonClicked);
-    }
-}
-
-fn update_time_bar_on_button_click(
-    _: Trigger<OnButtonClicked>,
-    mut bar: Single<&mut Bar, With<ButtonTimeBar>>,
-) {
-    bar.current = bar.max;
-}
-
-fn make_effect_on_button_click(
-    _: Trigger<OnButtonClicked>,
-    mut commands: Commands,
-    transform: Single<&Transform, With<GameButton>>,
+    mut player: Single<&mut Player>,
+    button_transform: Single<&Transform, With<TheButton>>,
     asset_server: Res<AssetServer>,
 ) {
+    player.clicked_on_target = true;
+    commands.trigger(OnButtonClicked);
+
+    // play click sound
     let handle = asset_server.load("audio/sound_effects/button_click.ogg");
     commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.4)));
+
+    // play circles effect
     commands.trigger(SpawnCircles {
-        location: transform.translation.xy().extend(CLICK_PARTICLES_Z),
+        location: button_transform.translation.xy().extend(CLICK_PARTICLES_Z),
         start_size: THE_BUTTON_SIZE * 1.1,
         end_size: THE_BUTTON_SIZE * 1.4,
         start_color: THE_BUTTON_COLOR.to_linear(),
@@ -156,4 +135,12 @@ fn make_effect_on_button_click(
         spacing: 8.0,
         ..default()
     });
+}
+
+fn fill_time_bar_on_button_click(
+    _: Trigger<Pointer<Click>>,
+    mut bar: Single<&mut Bar, With<ButtonTimeBar>>,
+) {
+    // update time bar
+    bar.current = bar.max;
 }

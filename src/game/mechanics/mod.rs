@@ -1,15 +1,17 @@
 use bevy::prelude::*;
 
-mod button;
 mod durability;
+mod square;
+mod the_button;
 mod timer;
 mod triangles;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
-        button::plugin,
+        the_button::plugin,
         timer::plugin,
         durability::plugin,
         triangles::plugin,
+        square::plugin,
     ));
 }

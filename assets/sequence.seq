@@ -20,31 +20,33 @@
  0 | M | triangles
  5 | T | They're getting in the way of THE BUTTON. Click to destroy them.
  5 | T | If a triangle touches THE BUTTON, it breaks. Don't let that happen.
- 5 | T |
+10 | T |
 
-# square - 00:40
-# 10 | T | A huge square is blocking your button duties. Drag it out of the way.
-#  0 | M | square
-#  5 | T |
+# square - 00:50
+ 5 | T | A huge square is blocking your button duties. Drag it out of the way.
+ 0 | M | square
+10 | T |
 
-# pentagon - 00:55
+# pentagon - 01:05
 # 10 | T | Run! A pentagon is coming for you. If it touches you, it's game over.
 #  0 | M | pentagon
-#  5 | T |
+# 10 | T |
 
-# hexagon - 01:10
+# hexagon - 01:25
 # 10 | T | A wild hexagon appeared! When it grows, everything speeds up.
 #  0 | M | hexagon
-#  5 | T | Might be a good idea to click that hexagon and make it smaller.
-#  5 | T |
+# 10 | T | Might be a good idea to click that hexagon and make it smaller.
+# 10 | T |
 
-# chaos - 01:25
+# chaos - 01:55
 # 10 | T | Okay, it's chaos now. Do your best, I guess. :D
 #  0 | M | chaos
-#  5 | T |
+# 10 | T |
 
-# star - 01:40
+# star - 02:15
 # 10 | T | Hey look that's the star button.
 #  0 | M | star
 #  5 | T | Click it 20 times and you might just end this nightmare.
 #  5 | T |
+
+# final - 02:35
