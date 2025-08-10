@@ -44,9 +44,16 @@ impl FromWorld for Soundtrack {
 
 fn on_game_over(
     trigger: Trigger<GameOver>,
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
     mut game_over_data: ResMut<GameOverData>,
     mut next_screen: ResMut<NextState<Screen>>,
 ) {
+    if trigger.event().0 != GameMechanic::Victory {
+        let handle = asset_server.load("audio/sound_effects/lose.ogg");
+        commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.4)));
+    }
+
     game_over_data.reason = trigger.event().0;
     next_screen.set(Screen::GameOver);
 }
@@ -61,6 +68,6 @@ fn start_soundtrack(mut commands: Commands, soundtrack: Res<Soundtrack>) {
 
 fn on_victory(mut commands: Commands, asset_server: Res<AssetServer>) {
     let handle = asset_server.load("audio/sound_effects/victory.ogg");
-    commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.4)));
+    commands.spawn((Name::new("Button click sound"), sound_effect(handle, 0.3)));
     commands.trigger(GameOver(GameMechanic::Victory));
 }
