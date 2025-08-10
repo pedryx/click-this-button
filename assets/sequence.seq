@@ -2,21 +2,47 @@
  0 | T | You're the red dot. Move with your mouse.
  3 | T | Your purpose in this life? Click THE BUTTON.
  0 | M | button
- 4 | T | Just one tiny rule: Do it every 5 second, or you die.
+ 4 | T | Just one rule: Do it every 5 second. Or you die. No big deal.
  0 | M | button time
- 5 | T | Have fun! :)
+ 5 | T | So, uh... have fun! :)
  0 | M | timer
  5 | T |
 
 # durability - 00:05
- 5 | T | Each time yut click THE BUTTON, it's durability goes down.
+ 5 | T | Each time you click THE BUTTON, its durability goes down. Of course.
  0 | M | durability
- 5 | T | You can repair THE BUTTON by clicking on the 'FIX' button.
+ 5 | T | To fix THE BUTTON, you'll need to click the 'FIX' button.
  0 | M | fix
  5 | T |
 
 # triangles - 00:20
-10 | T | Oh no! Evil hexagons are attacking, defend THE BUTTON.
+10 | T | Oh no, triangles! They're getting in the way of THE BUTTON. Click to destroy them.
  0 | M | triangles
- 5 | T | THE BUTTON breaks when evil hexagon touches it.
+ 5 | T | If a triangle touches THE BUTTON, it breaks. Don't let that happen.
  5 | T |
+
+# square - 00:40
+# 10 | T | A huge square is blocking your button duties. Drag it out of the way.
+#  0 | M | square
+#  5 | T |
+
+# pentagon - 00:55
+# 10 | T | Run! A pentagon is coming for you. If it touches you, it's game over.
+#  0 | M | pentagon
+#  5 | T |
+
+# hexagon - 01:10
+# 10 | T | A wild hexagon appeared! When it grows, everything speeds up. EVERYTHING.
+#  0 | M | hexagon
+#  5 | T | Might be a good idea to click that hexagon and make it smaller.
+#  5 | T |
+
+# chaos - 01:25
+# 10 | T | Okay, it's chaos now. Do your best, I guess. :D
+#  0 | M | chaos
+#  5 | T |
+
+# star - 01:40
+# 10 | T | That's a star button. Click it 20 times and you might just end this nightmare.
+#  0 | M | star
+#  5 | T |
