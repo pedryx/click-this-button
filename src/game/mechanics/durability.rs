@@ -13,7 +13,7 @@ use crate::{
     screens::Screen,
 };
 
-const MAX_DURABILITY: f32 = 8.0;
+const MAX_DURABILITY: f32 = 6.0;
 const CLICK_DAMAGE: f32 = 1.0;
 const BAR_COLOR: Color = Color::linear_rgb(1.0, 1.0, 0.0);
 

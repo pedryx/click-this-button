@@ -20,7 +20,7 @@ const THE_BUTTON_COLOR: Color = Color::linear_rgb(0.0, 1.0, 0.0);
 const TEXT_SIZE: f32 = 32.0;
 const TEXT_COLOR: Color = Color::linear_rgb(0.0, 0.0, 0.0);
 
-const TIME_BAR_DURATION: f32 = 6.0;
+const TIME_BAR_DURATION: f32 = 8.0;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameMechanic::Button), spawn_button)

@@ -17,7 +17,7 @@ const TRIANGLE_SPAWN_INTERVAL: f32 = 2.5;
 const TRIANGLE_SIZE: f32 = 48.0;
 const TRIANGLE_COLOR: Color = Color::linear_rgb(0.0, 0.0, 1.0);
 const TRIANGLE_Z: f32 = 80.0;
-const TRIANGLE_SPEED: f32 = 128.0;
+const TRIANGLE_SPEED: f32 = 96.0;
 
 const FRAGMENT_SIZE: f32 = 12.0;
 const FRAGMENTS_PER_HEXAGON: usize = 8;

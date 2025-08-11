@@ -13,10 +13,10 @@ use crate::{
     screens::Screen,
 };
 
-const PENTAGON_Z: f32 = 90.0;
+const PENTAGON_Z: f32 = 95.0;
 const PENTAGON_COLOR: Color = Color::linear_rgb(1.0, 0.5, 0.0);
-const PENTAGON_SIZE: f32 = 48.0;
-const PENTAGON_SPEED: f32 = 128.0;
+const PENTAGON_SIZE: f32 = 32.0;
+const PENTAGON_SPEED: f32 = 192.0;
 
 const SPAWN_DISTANCE: f32 = 1024.0;
 
