@@ -4,6 +4,7 @@ use crate::{PausableSystems, game::game_sequencer::GameMechanic, screens::Screen
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameMechanic::Timer), spawn_timer)
+        .add_systems(OnExit(Screen::Gameplay), despawn_timer)
         .add_systems(
             Update,
             (
@@ -60,6 +61,10 @@ fn spawn_timer(mut commands: Commands, asset_server: Res<AssetServer>) {
         });
 
     commands.init_resource::<ElapsedTime>();
+}
+
+fn despawn_timer(mut commands: Commands) {
+    commands.remove_resource::<ElapsedTime>();
 }
 
 fn increment_time(time: Res<Time>, mut elapsed_time: ResMut<ElapsedTime>) {
