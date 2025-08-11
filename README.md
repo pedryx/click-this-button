@@ -11,7 +11,7 @@ This is a game about clicking a button.
 
 ## Game Mechanics
 
-The sequence and timing of each game mechanic can be customized in the assets/sequence.seq file. It is a simple text file where each action is on its own line. Each action has the following format: <time> | <action_type> | <content>.
+The sequence and timing of each game mechanic can be customized in the assets/sequence.seq file. It is a simple text file where each action is on its own line. Each action has the following format: ``<time> | <action_type> | <content>``.
 
 There are two action types:
 - **Change text (T)**: Changes the text to the specified content.
@@ -23,3 +23,10 @@ The time specifies how many seconds need to elapse in order to invoke the action
 
 This game was made for the SoloDevelopment Jam #8 in 72 hours.
 [Itch.io](https://pedryx.itch.io/click-this-button)
+
+## Credits
+
+- Menu Buttons SFX by Jaszunio15 - CC0
+- Supper Vanilla font by fsuarez91 - Free for personal use & commercial use
+- In Game Soundtrack by Petr Kotáb - CC0
+- In Game SFX made in [Bfxf](https://www.bfxr.net)
